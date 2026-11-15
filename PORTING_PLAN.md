@@ -77,3 +77,17 @@ Nouvelles cartes pour la borne, de la plus proche de l'existant à la plus lourd
 
 - Le 68000 et le YM2151 servent à Ghouls'n Ghosts, OutRun et Power Drift : ils s'écrivent une seule fois.
 - OutRun et Power Drift se jouent au volant : la borne devra gérer les commandes analogiques.
+
+Commodore 64 :
+- Jouer aux jeux C64 avec les manettes modernes, comme pour la borne : joystick et touche feu sur la manette, joystick 2 pour jouer à deux.
+- Mettre en avant les jeux C64 récents, écrits et diffusés librement par des amateurs.
+- Puces à écrire : 6510 (variante du 6502) et son banc de test, vidéo VIC-II, son SID, CIA 6526 (minuteries, joystick, clavier).
+- Les jeux se chargent depuis des fichiers `.prg` et des cartouches `.crt`. Le lecteur de disquette 1541 vient plus tard, s'il le faut.
+- Les ROMs système du C64 (KERNAL, BASIC, caractères) sont à fournir par l'utilisateur.
+
+Salle d'arcade en 3D :
+- Une salle avec plusieurs bornes, allumées ou éteintes. On en ajoute, on compose sa salle.
+- Chaque borne fait tourner une carte de la borne actuelle : son image devient l'écran de la borne, son son devient une source 3D.
+- Les bornes allumées tournent en mode démo. On s'approche d'une borne, on prend la manette, on joue.
+- Rendu FMeX, effet d'écran cathodique. Un exemple à part (`samples/ArcadeRoom`) : la borne simple reste sans FMeX.
+- Bornes aux couleurs de RetroLab : les décors d'origine des fabricants ne sont pas reproduits.

@@ -77,3 +77,17 @@ New boards for the cabinet, from closest to what exists to heaviest:
 
 - The 68000 and the YM2151 serve Ghouls'n Ghosts, OutRun and Power Drift: each is written once.
 - OutRun and Power Drift are played with a wheel: the cabinet will need analog controls.
+
+Commodore 64:
+- Play C64 games with modern gamepads, as with the cabinet: joystick and fire button on the gamepad, joystick 2 for two players.
+- Showcase recent C64 games, written and freely released by hobbyists.
+- Chips to write: 6510 (a 6502 variant) and its test bench, VIC-II video, SID sound, CIA 6526 (timers, joystick, keyboard).
+- Games load from `.prg` files and `.crt` cartridges. The 1541 disk drive comes later, if needed.
+- The C64 system ROMs (KERNAL, BASIC, characters) are provided by the user.
+
+3D arcade room:
+- A room with several cabinets, switched on or off. You add cabinets and build your own room.
+- Each cabinet runs a board of the current cabinet: its picture becomes the cabinet screen, its sound becomes a 3D source.
+- Switched-on cabinets run in attract mode. Walk up to one, take the gamepad, play.
+- FMeX rendering, CRT screen effect. A separate sample (`samples/ArcadeRoom`): the simple cabinet stays free of FMeX.
+- Cabinets in RetroLab colours: the manufacturers' original artwork is not reproduced.
