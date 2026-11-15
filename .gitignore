@@ -1,0 +1,14 @@
+# ROMs Capcom : usage perso, JAMAIS dans le depot
+roms/
+*.zip
+# build
+bin/
+*.dcu
+*.map
+*.png
+# Code Capcom desassemble / annote : local uniquement
+analysis/
+# sorties de test
+*.log
+# Python
+__pycache__/

@@ -1,0 +1,178 @@
+{
+  "_doc": "Traduction francaise. Cle absente = texte anglais du code. Les %s / %d / %.1f doivent rester dans le meme ordre.",
+
+  "cmd": {
+    "lang": "Langue : en, fr... (défaut : la langue de Windows)",
+    "error": "ERREUR"
+  },
+
+  "romset": {
+    "err": {
+      "region": "Set %s : région \"%s\" absente",
+      "unknown": "Set de ROMs inconnu : \"%s\"",
+      "notfound": "Set %s : ni roms\\%s.zip ni roms\\%s\\ trouvés",
+      "file": "Set %s : fichier %s (CRC %.8x, %d octets) introuvable ou corrompu dans %s"
+    }
+  },
+
+  "board": {
+    "err": {
+      "inputlog": "%s : pas un journal d'entrées de borne",
+      "noboard": "Aucune carte \"%s\" n'est branchée dans ce programme"
+    }
+  },
+
+  "cabinet": {
+    "caption": "Borne - %s [%s, %s]  (F1 commandes)",
+    "cmd": {
+      "set": "Set de ROMs à brancher (défaut 1942)",
+      "frames": "Banc sans fenêtre : nombre d'images à exécuter",
+      "replay": "Rejoue un journal d'entrées (.inp)",
+      "coin": "Banc : image où insérer une pièce",
+      "start": "Banc : image où appuyer sur Start 1",
+      "hashlog": "Banc : hash d'état de chaque image (oracle)",
+      "shot": "Banc : PNG de la dernière image",
+      "shotevery": "Banc : PNG toutes les K images (avec --shot-dir)",
+      "shotdir": "Banc : dossier des PNG --shot-every",
+      "wav": "Banc : son des N images dans ce .wav",
+      "raw": "Banc : image moniteur, sans la rotation de la borne",
+      "zoom": "Banc : zoom entier des PNG",
+      "record": "Fenêtre : enregistre les entrées dans ce .inp à la fermeture",
+      "mute": "Fenêtre sans son",
+      "debug": "Fenêtre : image / focus / entrées dans la barre de titre",
+      "service": "Mode test de la carte (DIP service)",
+      "dip0": "Banque DIP 0 en hexa",
+      "dip1": "Banque DIP 1 en hexa"
+    }
+  },
+
+  "overlay": {
+    "title": "COMMANDES - %s",
+    "release": "version du %s",
+    "start": "F1 POUR DÉMARRER !",
+    "resume": "F1 POUR REPRENDRE",
+    "noxinput": "XInput absent : clavier seul",
+    "nopad": "aucune manette branchée",
+    "pads": "%d manette(s) branchée(s) - croix et stick gauche = directions",
+    "player1": "JOUEUR 1",
+    "player2": "JOUEUR 2",
+    "cabinet": "BORNE",
+    "keyboard": "CLAVIER",
+    "gamepad": "MANETTE",
+    "capture": "<< touche ou bouton... (Échap : annuler) >>",
+    "help1": "Haut/Bas choisir   Entrée (A) ajouter   Suppr (X) effacer",
+    "help2": "F5 câblage d'origine   Échap / F1 / Start : JOUER",
+    "help3": "En jeu : F1 commandes, M son, P pause, F3 reset, Échap quitter"
+  },
+
+  "controls": {
+    "up": "Haut",
+    "down": "Bas",
+    "left": "Gauche",
+    "right": "Droite",
+    "button1": "Bouton 1",
+    "button2": "Bouton 2",
+    "button3": "Bouton 3",
+    "coin1": "Pièce 1",
+    "coin2": "Pièce 2",
+    "start1": "Start 1",
+    "start2": "Start 2",
+    "service": "Service"
+  },
+
+  "key": {
+    "up": "Haut",
+    "down": "Bas",
+    "left": "Gauche",
+    "right": "Droite",
+    "space": "Espace",
+    "shift": "Maj",
+    "enter": "Entrée",
+    "backspace": "Retour",
+    "insert": "Inser",
+    "delete": "Suppr",
+    "home": "Début",
+    "end": "Fin",
+    "pgup": "PgPréc",
+    "pgdn": "PgSuiv",
+    "capslock": "VerrMaj",
+    "numplus": "Pavé +",
+    "numminus": "Pavé -",
+    "numpad": "Pavé %d"
+  },
+
+  "pad": {
+    "up": "Haut",
+    "down": "Bas",
+    "left": "Gauche",
+    "right": "Droite"
+  },
+
+  "gfx": {
+    "sheet": "Planche",
+    "color": "Couleur",
+    "bank": "Banque",
+    "zoom": "Zoom",
+    "rot": "ROT270 (vue borne)",
+    "status": "%s  couleur %d  banque %d  -  %d x %d px  -  set %s",
+    "hover": "%s #%d ($%.3x)  couleur %d",
+    "err": {
+      "sheet": "Planche inconnue \"%s\" (all, chars, tiles, sprites, palette)"
+    },
+    "cmd": {
+      "shot": "Écrit la planche en PNG et quitte",
+      "color": "Index de couleur",
+      "bank": "Banque de palette des tuiles (0..3)",
+      "zoom": "Facteur de zoom entier",
+      "raw": "Éléments dans le repère ROM (sans la rotation ROT270 de la borne)",
+      "set": "Set de ROMs (défaut 1942)"
+    }
+  },
+
+  "ym": {
+    "done": "Fréquence FM %.1f Hz - écrit dans %s"
+  },
+
+  "z80": {
+    "result": "%s : %d tests, %d erreur(s) - %.0f M T-states en %.1f s (%.0f MHz équivalent)",
+    "cmd": {
+      "zex": "zexdoc | zexall | both (défaut both)",
+      "dir": "Dossier contenant zexdoc.com / zexall.com"
+    }
+  },
+
+  "map": {
+    "asm": {
+      "h1": "; 1942 (Capcom, 1984) - programme du CPU principal, cartographie dynamique",
+      "h2": "; Généré par labs/Map1942. Code Capcom : usage local uniquement, ne pas diffuser.",
+      "h3": "; Colonnes : adresse CPU | octets | instruction | ; xN = exécutions, [S] = statique (jamais exécuté ici)"
+    },
+    "ram": {
+      "h1": "; 1942 - carte RAM / E-S du CPU principal (accès observés)",
+      "h2": "; adresse | zone | lectures | écritures | écrit par | lu par",
+      "hw": "; --- registres matériels ---"
+    },
+    "cov": {
+      "h1": "1942 - couverture du programme principal",
+      "instr": "Instructions exécutées (total) : %d",
+      "cross": "Contrôle croisé désassembleur/CPU : %d écart(s)",
+      "bank": "%-8s %6d octets : code exécuté %5.1f%%, code statique %5.1f%%, données lues %5.1f%%, %d routines",
+      "hot": "Routines les plus chaudes (instructions exécutées) :"
+    },
+    "mismatch": "%s : longueur %d, PC suivant %s",
+    "cmd": {
+      "attract": "Images en mode attract (sans pièce), défaut 3600",
+      "replay": "Journaux d'entrées à rejouer, séparés par des virgules",
+      "frames": "Limite d'images par rejeu (défaut : tout le journal)",
+      "service": "Images en mode test (DIP service), défaut 1200",
+      "out": "Dossier de sortie (défaut : <racine>\\analysis)"
+    },
+    "run": {
+      "attract": "Attract : %d images",
+      "service": "Mode test : %d images",
+      "replay": "Rejeu : %s",
+      "static": "Descente statique...",
+      "written": "Écrit dans %s"
+    }
+  }
+}
