@@ -37,7 +37,7 @@ Every file is checked by its CRC32. A wrong or missing file is reported by name.
 ## Build and run
 
 1. Open `samples/Cabinet/Cabinet.dpr` in Delphi and compile for Win64. Every unit is listed in the `.dpr`: nothing to configure. Developed with Delphi 13.
-2. Run `Cabinet.exe` for 1942, or `Cabinet.exe --set commando`, `--set gunsmoke`, `--set 1943`.
+2. Run `Cabinet.exe`: a menu lists the games, ready or with their ROM missing. `Cabinet.exe --set commando` starts a game directly.
 
 ## How the code is organised
 
@@ -100,7 +100,7 @@ Chaque fichier est contrôlé par son CRC32. Un fichier faux ou absent est signa
 ## Compiler et lancer
 
 1. Ouvrir `samples/Cabinet/Cabinet.dpr` dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le `.dpr` : rien à configurer. Développé avec Delphi 13.
-2. Lancer `Cabinet.exe` pour 1942, ou `Cabinet.exe --set commando`, `--set gunsmoke`, `--set 1943`.
+2. Lancer `Cabinet.exe` : un menu affiche les jeux, prêts ou avec leur ROM manquante. `Cabinet.exe --set commando` lance un jeu directement.
 
 ## Organisation du code
 

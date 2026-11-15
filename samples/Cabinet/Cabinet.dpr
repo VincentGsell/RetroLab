@@ -22,13 +22,16 @@ uses
   Arcade.Cabinet.Sound in '..\..\src\cabinet\Arcade.Cabinet.Sound.pas',
   Arcade.Cabinet.Gamepad in '..\..\src\cabinet\Arcade.Cabinet.Gamepad.pas',
   Arcade.Cabinet.Controls in '..\..\src\cabinet\Arcade.Cabinet.Controls.pas',
+  Cabinet.Logo in 'Cabinet.Logo.pas',
   Cabinet.Overlay in 'Cabinet.Overlay.pas',
+  Cabinet.Menu in 'Cabinet.Menu.pas',
   Cabinet.Window in 'Cabinet.Window.pas',
   Cabinet.Bench in 'Cabinet.Bench.pas',
 
   // ---- LA PRISE (the edge connector every board plugs into) ------------------------------------
   Arcade.Board in '..\..\src\core\Arcade.Board.pas',
   Arcade.RomSet in '..\..\src\core\Arcade.RomSet.pas',
+  Arcade.Catalog in '..\..\src\core\Arcade.Catalog.pas',
   Arcade.Gfx in '..\..\src\core\Arcade.Gfx.pas',
   Arcade.Language in '..\..\src\core\Arcade.Language.pas',   // English in the code, lang\<code>.json for the others
 
@@ -77,6 +80,7 @@ var
   lBoard: TArcadeBoard;
   lBench: TBenchOptions;
   lWindow: TCabinetWindow;
+  lOptions: TCabinetOptions;
 
 function IntParam(const aName: string; aDefault: Integer): Integer;
 begin
@@ -91,7 +95,7 @@ begin
   lCmd := gsCommandLineParser;
   SelectLanguage(lCmd.getParameter('lang'));
   lCmd.registerParameter('lang', [], Tr('cmd.lang', 'Language : en, fr... (default : the Windows language)'));
-  lCmd.registerParameter('set', [], Tr('cabinet.cmd.set', 'ROM set to plug in (default 1942)'));
+  lCmd.registerParameter('set', [], Tr('cabinet.cmd.set', 'Game to start (default : the game menu)'));
   lCmd.registerParameter('frames', [], Tr('cabinet.cmd.frames', 'Headless bench : number of frames to run'));
   lCmd.registerParameter('replay', [], Tr('cabinet.cmd.replay', 'Replays an input log (.inp)'));
   lCmd.registerParameter('coin', [], Tr('cabinet.cmd.coin', 'Bench : frame where a coin is inserted'));
@@ -127,23 +131,22 @@ begin
     end;
   end;
 
-  // the cartridge, then the board it asks for
-  if lCmd.hasParameter('set') then
-    lRoms := LoadRomSet(lCmd.getParameter('set'), ExtractFilePath(ParamStr(0)))
-  else
-    lRoms := LoadRomSet('1942', ExtractFilePath(ParamStr(0)));
-  try
-    lBoard := CreateBoardForSet(lRoms);
+  // headless bench : the cartridge, then the board it asks for
+  if lCmd.hasParameter('frames') then
+  begin
+    if lCmd.hasParameter('set') then
+      lRoms := LoadRomSet(lCmd.getParameter('set'), ExtractFilePath(ParamStr(0)))
+    else
+      lRoms := LoadRomSet('1942', ExtractFilePath(ParamStr(0)));
     try
-      if lCmd.hasParameter('dip0') then
-        lBoard.SetDip(0, StrToInt('$' + lCmd.getParameter('dip0')));
-      if lCmd.hasParameter('dip1') then
-        lBoard.SetDip(1, StrToInt('$' + lCmd.getParameter('dip1')));
-      if lCmd.hasParameter('service') then
-        lBoard.SetServiceMode(True);
-
-      if lCmd.hasParameter('frames') then
-      begin
+      lBoard := CreateBoardForSet(lRoms);
+      try
+        if lCmd.hasParameter('dip0') then
+          lBoard.SetDip(0, StrToInt('$' + lCmd.getParameter('dip0')));
+        if lCmd.hasParameter('dip1') then
+          lBoard.SetDip(1, StrToInt('$' + lCmd.getParameter('dip1')));
+        if lCmd.hasParameter('service') then
+          lBoard.SetServiceMode(True);
         lBench := Default(TBenchOptions);
         lBench.Frames := IntParam('frames', 600);
         lBench.ReplayFile := lCmd.getParameter('replay');
@@ -158,26 +161,36 @@ begin
         lBench.Zoom := IntParam('zoom', 2);
         lBench.TraceFile := ChangeFileExt(ParamStr(0), '.trace.txt');
         RunBench(lBoard, lBench);
-        Exit;
-      end;
-
-      Application.Initialize;
-      // no owner : the window must die before the board it drives
-      lWindow := TCabinetWindow.CreateCabinet(nil, lBoard, lCmd.getParameter('record'),
-        not lCmd.hasParameter('mute'));
-      try
-        lWindow.Debug := lCmd.hasParameter('debug');
-        Application.MainForm := lWindow;
-        lWindow.Show;
-        Application.Run;
       finally
-        Application.MainForm := nil;
-        lWindow.Free;
+        lBoard.Free;
       end;
     finally
-      lBoard.Free;
+      lRoms.Free;
     end;
+    Exit;
+  end;
+
+  // the window : the game menu, or the game asked with --set ; it plugs the boards in itself
+  lOptions := Default(TCabinetOptions);
+  lOptions.SetName := lCmd.getParameter('set');
+  lOptions.RecordFile := lCmd.getParameter('record');
+  lOptions.Sound := not lCmd.hasParameter('mute');
+  lOptions.Dip0 := -1;
+  lOptions.Dip1 := -1;
+  if lCmd.hasParameter('dip0') then
+    lOptions.Dip0 := StrToInt('$' + lCmd.getParameter('dip0'));
+  if lCmd.hasParameter('dip1') then
+    lOptions.Dip1 := StrToInt('$' + lCmd.getParameter('dip1'));
+  lOptions.Service := lCmd.hasParameter('service');
+  Application.Initialize;
+  lWindow := TCabinetWindow.CreateCabinet(nil, lOptions);
+  try
+    lWindow.Debug := lCmd.hasParameter('debug');
+    Application.MainForm := lWindow;
+    lWindow.Show;
+    Application.Run;
   finally
-    lRoms.Free;
+    Application.MainForm := nil;
+    lWindow.Free;
   end;
 end.

@@ -25,7 +25,7 @@
   "cabinet": {
     "caption": "Borne - %s [%s, %s]  (F1 commandes)",
     "cmd": {
-      "set": "Set de ROMs à brancher (défaut 1942)",
+      "set": "Jeu à lancer (défaut : le menu des jeux)",
       "frames": "Banc sans fenêtre : nombre d'images à exécuter",
       "replay": "Rejoue un journal d'entrées (.inp)",
       "coin": "Banc : image où insérer une pièce",
@@ -46,6 +46,15 @@
     }
   },
 
+  "menu": {
+    "ready": "PRÊT",
+    "norom": "ROM MANQUANTE",
+    "play": "%s : Entrée, A ou un clic pour jouer.",
+    "howto": "Pour jouer à %s, mettre le set MAME « %s » sous le nom %s.zip dans :",
+    "help": "Haut/Bas : choisir   Entrée, A ou clic : jouer   Échap : quitter",
+    "ingame": "En jeu : F1 commandes, Échap retour à ce menu"
+  },
+
   "overlay": {
     "title": "COMMANDES - %s",
     "release": "version du %s",
@@ -62,7 +71,7 @@
     "capture": "<< touche ou bouton... (Échap : annuler) >>",
     "help1": "Haut/Bas choisir   Entrée (A) ajouter   Suppr (X) effacer",
     "help2": "F5 câblage d'origine   Échap / F1 / Start : JOUER",
-    "help3": "En jeu : F1 commandes, M son, P pause, F3 reset, Échap quitter"
+    "help3": "En jeu : F1 commandes, M son, P pause, F3 reset, Échap menu des jeux"
   },
 
   "controls": {

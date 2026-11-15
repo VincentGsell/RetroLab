@@ -5,7 +5,7 @@ unit Cabinet.Overlay;
 ///    Up / Down (or pad d-pad) choose a switch, Enter (pad A) add a key or pad button,
 ///    Delete (pad X) clear the switch, F5 factory wiring, Esc / F1 / pad Start back to the game.
 ///  Driven by Tick, once per frame, while the emulation is held.
-///  Header : the RETROLAB logo (5x7 pixel font, arcade colours), tagline, author and release date,
+///  Header : the RETROLAB logo (Cabinet.Logo), tagline, author and release date,
 ///  and a blinking "PRESS F1 TO START!".
 
 interface
@@ -21,6 +21,7 @@ uses
   FMX.Objects,
   FMX.Graphics,
   GS.Common.I18n,
+  Cabinet.Logo,
   Arcade.Cabinet.Gamepad,
   Arcade.Cabinet.Controls;
 
@@ -61,77 +62,15 @@ type
     /// The wiring changed since Show.
     property Modified: Boolean read FModified;
     property Visible: Boolean read GetVisible;
+    /// The game shown on the card, set when a board is plugged in.
+    property Title: string read FTitle write FTitle;
   end;
 
 implementation
 
 const
   CBindWidth = 26;
-  CLogoText = 'RETROLAB';
-  CTagline = 'CLASSIC GAMES, RETRO GAMING REIMAGINED';
   CBlinkFrames = 30;
-
-// 5 x 7 pixel font, only the letters of the logo.
-function Glyph(aChar: Char): TArray<string>;
-begin
-  case aChar of
-    'A': Result := ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'];
-    'B': Result := ['####.', '#...#', '#...#', '####.', '#...#', '#...#', '####.'];
-    'D': Result := ['####.', '#...#', '#...#', '#...#', '#...#', '#...#', '####.'];
-    'E': Result := ['#####', '#....', '#....', '####.', '#....', '#....', '#####'];
-    'G': Result := ['.###.', '#...#', '#....', '#.###', '#...#', '#...#', '.###.'];
-    'H': Result := ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'];
-    'I': Result := ['#####', '..#..', '..#..', '..#..', '..#..', '..#..', '#####'];
-    'L': Result := ['#....', '#....', '#....', '#....', '#....', '#....', '#####'];
-    'M': Result := ['#...#', '##.##', '#.#.#', '#.#.#', '#...#', '#...#', '#...#'];
-    'N': Result := ['#...#', '##..#', '#.#.#', '#..##', '#...#', '#...#', '#...#'];
-    'O': Result := ['.###.', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'];
-    'P': Result := ['####.', '#...#', '#...#', '####.', '#....', '#....', '#....'];
-    'R': Result := ['####.', '#...#', '#...#', '####.', '#.#..', '#..#.', '#...#'];
-    'T': Result := ['#####', '..#..', '..#..', '..#..', '..#..', '..#..', '..#..'];
-  else
-    Result := ['...', '...', '...', '...', '...', '...', '...'];
-  end;
-end;
-
-// The logo as a bitmap : one pixel per dot, yellow to red from top to bottom, dark red shadow.
-procedure DrawLogo(aBitmap: TBitmap; const aText: string);
-const
-  CRows: array[0..6] of TAlphaColor = ($FFFFF060, $FFFFE040, $FFFFC020, $FFFFA010, $FFFF8000,
-    $FFFF5A00, $FFE83000);
-  CShadow: TAlphaColor = $FF600000;
-var
-  lData: TBitmapData;
-  lChar: Char;
-  lRows: TArray<string>;
-  lWidth, x, y, lLeft: Integer;
-begin
-  lWidth := 0;
-  for lChar in aText do
-    Inc(lWidth, Length(Glyph(lChar)[0]) + 1);
-  aBitmap.SetSize(lWidth + 1, 8);
-  aBitmap.Clear(TAlphaColors.Null);
-  if not aBitmap.Map(TMapAccess.Write, lData) then
-    Exit;
-  try
-    lLeft := 0;
-    for lChar in aText do
-    begin
-      lRows := Glyph(lChar);
-      for y := 0 to 6 do
-        for x := 1 to Length(lRows[y]) do
-          if lRows[y][x] = '#' then
-            lData.SetPixel(lLeft + x, y + 1, CShadow);
-      for y := 0 to 6 do
-        for x := 1 to Length(lRows[y]) do
-          if lRows[y][x] = '#' then
-            lData.SetPixel(lLeft + x - 1, y, CRows[y]);
-      Inc(lLeft, Length(lRows[0]) + 1);
-    end;
-  finally
-    aBitmap.Unmap(lData);
-  end;
-end;
 
 { TCabinetOverlay }
 
@@ -297,7 +236,7 @@ begin
     lLines.Add(Tr('overlay.help1', 'Up/Down select   Enter (A) add   Del (X) clear'));
     lLines.Add(Tr('overlay.help2', 'F5 factory wiring   Esc / F1 / Start : PLAY'));
     lLines.Add('');
-    lLines.Add(Tr('overlay.help3', 'In game : F1 controls, M sound, P pause, F3 reset, Esc quit'));
+    lLines.Add(Tr('overlay.help3', 'In game : F1 controls, M sound, P pause, F3 reset, Esc game menu'));
     FText.Text := lLines.Text;
   finally
     lLines.Free;
