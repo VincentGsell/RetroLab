@@ -9,15 +9,16 @@ Rewriting 1980s arcade games in modern Object Pascal, as code that both humans a
 
 ## Play
 
-- Four Capcom arcade games: 1942, Commando, Gun.Smoke and 1943.
+- Six arcade games: 1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins by Capcom, OutRun by Sega.
 - With an Xbox gamepad, or any XInput gamepad, plugged in even while the game runs. The keyboard works too.
-- Better with two: 1943 is played by two at the same time, in co-op, one gamepad each. 1942, Commando and Gun.Smoke are played by two in turns, as on the cabinet.
+- Better with two: 1943 is played by two at the same time, in co-op, one gamepad each. 1942, Commando, Gun.Smoke and Ghosts'n Goblins are played by two in turns, as on the cabinet.
+- OutRun: left and right steer, button 1 accelerates, button 2 brakes, button 3 shifts gear. The gamepad vibrates when you leave the road; V switches it off.
 - F1 shows the controls and lets you change them.
 
 ## The project
 
 - This is a work in progress.
-- Today, an arcade cabinet emulated in Delphi plays these four games.
+- Today, an arcade cabinet emulated in Delphi plays these six games.
 - It is deterministic: the same inputs always give the same game. It is the reference for the rewrite.
 - What comes next is in the [porting plan](PORTING_PLAN.en.md).
 
@@ -31,6 +32,8 @@ No ROM is provided, and none may be added to this repository. Use your own ROM s
 | Commando | `roms/commando.zip` | Commando (World) |
 | Gun.Smoke | `roms/gunsmoke.zip` | Gun.Smoke (World, 1985-11-15) |
 | 1943 | `roms/1943.zip` | 1943: The Battle of Midway (Euro) |
+| Ghosts'n Goblins | `roms/gng.zip` | Ghosts'n Goblins (World? set 1) |
+| OutRun | `roms/outrun.zip` | Out Run (sitdown/upright, Rev B) |
 
 Every file is checked by its CRC32. A wrong or missing file is reported by name.
 
@@ -72,15 +75,16 @@ Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un cod
 
 ## Jouer
 
-- Quatre jeux d'arcade Capcom : 1942, Commando, Gun.Smoke et 1943.
+- Six jeux d'arcade : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun de Sega.
 - À la manette Xbox, ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi.
-- À deux, c'est mieux : 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.
+- À deux, c'est mieux : 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando, Gun.Smoke et Ghosts'n Goblins se jouent à deux chacun son tour, comme sur la borne.
+- OutRun : gauche et droite pour tourner, bouton 1 pour accélérer, bouton 2 pour freiner, bouton 3 pour changer de vitesse. La manette vibre quand on sort de la route ; V coupe les vibrations.
 - F1 affiche les commandes et permet de les changer.
 
 ## Le projet
 
 - C'est un travail en cours.
-- Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces quatre jeux.
+- Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces six jeux.
 - Elle est déterministe : les mêmes entrées donnent toujours la même partie. Elle sert de référence pour la réécriture.
 - La suite est dans le [plan de portage](PORTING_PLAN.md).
 
@@ -94,6 +98,8 @@ Aucune ROM n'est fournie, et aucune ne doit être ajoutée à ce dépôt. Utilis
 | Commando | `roms/commando.zip` | Commando (World) |
 | Gun.Smoke | `roms/gunsmoke.zip` | Gun.Smoke (World, 1985-11-15) |
 | 1943 | `roms/1943.zip` | 1943: The Battle of Midway (Euro) |
+| Ghosts'n Goblins | `roms/gng.zip` | Ghosts'n Goblins (World? set 1) |
+| OutRun | `roms/outrun.zip` | Out Run (sitdown/upright, Rev B) |
 
 Chaque fichier est contrôlé par son CRC32. Un fichier faux ou absent est signalé par son nom.
 

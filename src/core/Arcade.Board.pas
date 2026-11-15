@@ -35,6 +35,12 @@ type
     System: TArcadeSystems;
   end;
 
+  /// What the cabinet makes a player feel (wheel shaker, moving seat), 0 = still .. 1 = full.
+  /// Heavy = slow, strong motor ; Light = fast, soft motor (a gamepad's two rumble motors).
+  TArcadeRumble = record
+    Heavy, Light: Single;
+  end;
+
   /// One TArcadeInputs per frame from power-on : the whole game is a pure function of this log.
   TInputLog = class
   private
@@ -71,6 +77,8 @@ type
     procedure SetAudioRate(aValue: Integer); virtual;
   public
     Inputs: TArcadeInputs;
+    /// Force feedback of the last frame, per player ; boards without motors leave it at rest.
+    Rumble: array[0..1] of TArcadeRumble;
     /// Off : RunFrame skips the video (headless oracle runs go faster).
     RenderEnabled: Boolean;
 

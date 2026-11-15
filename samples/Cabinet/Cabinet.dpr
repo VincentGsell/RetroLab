@@ -51,18 +51,30 @@ uses
   Arcade.Board.CapcomBM in '..\..\src\boards\Arcade.Board.CapcomBM.pas',
   Arcade.Board.CapcomBM.Video in '..\..\src\boards\Arcade.Board.CapcomBM.Video.pas',
   Arcade.Board.CapcomBM.Gfx in '..\..\src\boards\Arcade.Board.CapcomBM.Gfx.pas',
+  // PCB Capcom 85606 : MC6809 + Z80, 2 x YM2203, decor 2 niveaux, ROT0
+  Arcade.Board.Capcom85606 in '..\..\src\boards\Arcade.Board.Capcom85606.pas',
+  Arcade.Board.Capcom85606.Video in '..\..\src\boards\Arcade.Board.Capcom85606.Video.pas',
+
+  Arcade.Board.Sega1715376 in '..\..\src\boards\Arcade.Board.Sega1715376.pas',
+  Arcade.Board.Sega1715376.Video in '..\..\src\boards\Arcade.Board.Sega1715376.Video.pas',
 
   // ---- LES PUCES (chips) - soldered on the boards above ----------------------------------------
   Arcade.Chip.Z80 in '..\..\src\chips\Arcade.Chip.Z80.pas',
   Arcade.Chip.AY8910 in '..\..\src\chips\Arcade.Chip.AY8910.pas',
   Arcade.Chip.YM2203 in '..\..\src\chips\Arcade.Chip.YM2203.pas',
   Arcade.Chip.MCS51 in '..\..\src\chips\Arcade.Chip.MCS51.pas',
+  Arcade.Chip.M6809 in '..\..\src\chips\Arcade.Chip.M6809.pas',
+  Arcade.Chip.M68000 in '..\..\src\chips\Arcade.Chip.M68000.pas',
+  Arcade.Chip.YM2151 in '..\..\src\chips\Arcade.Chip.YM2151.pas',
+  Arcade.Chip.SegaPCM in '..\..\src\chips\Arcade.Chip.SegaPCM.pas',
 
   // ---- LES CARTOUCHES (ROM sets) - each one names the board family it needs -------------------
   Arcade.RomSet.Capcom1942 in '..\..\src\romsets\Arcade.RomSet.Capcom1942.pas',   // 1942, 1942a, 1942b, 1942w, 1942h -> capcom84100
   Arcade.RomSet.Commando in '..\..\src\romsets\Arcade.RomSet.Commando.pas',       // commando, commandou, commandou2, commandoj, sinvasn -> capcom85605
   Arcade.RomSet.GunSmoke in '..\..\src\romsets\Arcade.RomSet.GunSmoke.pas',       // gunsmoke, gunsmokej, gunsmokeu, gunsmokeua/ub/uc, gunsmokeg -> capcom85113
   Arcade.RomSet.Midway1943 in '..\..\src\romsets\Arcade.RomSet.Midway1943.pas',   // 1943, 1943u, 1943ua, 1943j, 1943ja, 1943jah -> capcombm
+  Arcade.RomSet.GhostsNGoblins in '..\..\src\romsets\Arcade.RomSet.GhostsNGoblins.pas',   // gng, gngb, gngc, gngt, makaimur* -> capcom85606
+  Arcade.RomSet.OutRun in '..\..\src\romsets\Arcade.RomSet.OutRun.pas',   // outrun, outrunra, outrundx, outrundxa -> sega1715376
 
   // ---- LIBRAIRIES : GS-Core (command line, CRC32, i18n, JSON) -----------------------------------
   GS.System.CommandLineParser in '..\..\third_party\gs-core\GS.System.CommandLineParser.pas',

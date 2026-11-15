@@ -12,3 +12,5 @@ analysis/
 *.log
 # Python
 __pycache__/
+# Jeux de tests 68000 (SingleStepTests, ~200 Mo) : telecharges, hors depot
+labs/M68000Test/tests/

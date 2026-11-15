@@ -56,27 +56,51 @@ Règles :
 ## Feuille de route
 
 Fait :
-- Borne émulée : 1942, Commando, Gun.Smoke et 1943.
+- Borne émulée : 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins et OutRun.
 - Commandes clavier et manette, configurables.
 
-Portage de 1942 :
-1. Enregistrer une partie de référence : `Cabinet.exe --record partie1.inp`.
-2. Interception de routine par adresse sur le Z80, observateur de RAM.
-3. Premières routines natives : score et aléatoire, vérifiées image par image.
-4. Joueur, ennemis, vagues, boss, jusqu'au jeu entièrement natif.
-5. Code modernisé, rendu FMeX, données en JSON.
+Ordre de travail :
+1. RetroLab Room. Elle n'utilise que les cartes existantes et pose les briques FMeX communes : jusqu'à 4 manettes, son, boucle à 60 Hz, écran cathodique.
+2. Beloved 43. C'est le remake le plus simple, il reprend ces briques.
+3. Hommage à Ghosts'n Goblins. Plateforme, 4 joueurs et caméra : il profite de Beloved 43.
+4. Nouvelles cartes, intercalées au fil de la liste des jeux à couvrir.
+5. Commodore 64.
+
+RetroLab Room, la salle d'arcade en 3D (`samples/RetroLabRoom`) :
+- Un programme à part. Cabinet reste tel quel.
+- Une salle avec une borne par jeu du catalogue : 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins, OutRun.
+- ROM présente : la borne est allumée, en mode démo. On clique, on joue.
+- ROM absente : la borne est éteinte, et un clic dit quel fichier mettre.
+- Chaque borne fait tourner une carte de la borne actuelle : son image devient l'écran, son son une source 3D.
+- Rendu FMeX, effet d'écran cathodique, bornes aux couleurs de RetroLab (les décors d'origine des fabricants ne sont pas reproduits).
+
+Beloved 43, hommage à 1943 en FMeX :
+- Un jeu à part, dans l'esprit de 1943 : shoot'em up vertical, avions du Pacifique, barre d'énergie, armes à ramasser, boss géants.
+- Modèles 3D, niveaux et musique neufs. La musique évoque l'époque sans reprendre les mélodies d'origine. Rien n'est repris de la ROM.
+- Jouable à deux en coopération, sans aucune ROM : n'importe qui peut le télécharger et jouer.
+- La borne émulée sert de référence pour les sensations : vitesse, rythme des vagues, difficulté.
+- Il devient une borne de plus dans RetroLab Room, toujours allumée.
+
+Hommage à Ghosts'n Goblins, en FMeX (nom à trouver) :
+- Un jeu à part, dans l'esprit de Ghosts'n Goblins : plateforme et tir, un chevalier qui perd son armure au premier coup, armes à lancer, cimetières et démons.
+- Tout est redessiné et les niveaux sont neufs. Certains rappellent ceux d'origine, pour que le lien soit évident.
+- De 1 à 4 joueurs en simultané.
+- Caméra commune qui recule quand les joueurs s'écartent, jusqu'à une limite. Au-delà, le joueur à la traîne est ramené vers les autres.
+- La difficulté suit le nombre de joueurs.
+- Un joueur tombé peut être relevé par les autres.
+- Les ennemis visent le joueur le plus proche.
+- Il devient lui aussi une borne de RetroLab Room.
 
 Nouvelles cartes pour la borne, de la plus proche de l'existant à la plus lourde :
 
 | Jeu | Matériel | À construire | Effort |
 |---|---|---|---|
-| Ghosts'n Goblins (Capcom, 1985) | Motorola 6809, Z80 son, 2 × YM2203 | puce 6809 et son banc de test, carte, cartouches | moyen : YM2203 déjà là |
-| Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | puces 68000, YM2151, MSM6295 ; vidéo CPS-1 (3 plans, sprites, priorités) | gros, ouvre toute la ludothèque CPS-1 |
-| OutRun (Sega, 1986) | 2 × 68000, Z80, YM2151, SegaPCM, générateur de route, sprites zoomés | SegaPCM, route et zoom de sprites Sega, commandes analogiques | gros |
+| Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | puce MSM6295 ; vidéo CPS-1 (3 plans, sprites, priorités) | moyen, ouvre toute la ludothèque CPS-1 |
 | Power Drift (Sega, 1988) | Y Board : 3 × 68000, sprites tournés et zoomés | rotation et zoom des sprites | le plus lourd |
 
-- Le 68000 et le YM2151 servent à Ghouls'n Ghosts, OutRun et Power Drift : ils s'écrivent une seule fois.
-- OutRun et Power Drift se jouent au volant : la borne devra gérer les commandes analogiques.
+- Le 68000 et le YM2151, écrits pour OutRun, servent aussi à Ghouls'n Ghosts et Power Drift.
+- OutRun se joue pour l'instant avec les boutons : volant progressif sur gauche / droite, accélérateur et frein sur les boutons 1 et 2, rapport sur le bouton 3.
+- Le stick et les gâchettes analogiques de la manette viendront avec Power Drift.
 
 Commodore 64 :
 - Jouer aux jeux C64 avec les manettes modernes, comme pour la borne : joystick et touche feu sur la manette, joystick 2 pour jouer à deux.
@@ -84,10 +108,3 @@ Commodore 64 :
 - Puces à écrire : 6510 (variante du 6502) et son banc de test, vidéo VIC-II, son SID, CIA 6526 (minuteries, joystick, clavier).
 - Les jeux se chargent depuis des fichiers `.prg` et des cartouches `.crt`. Le lecteur de disquette 1541 vient plus tard, s'il le faut.
 - Les ROMs système du C64 (KERNAL, BASIC, caractères) sont à fournir par l'utilisateur.
-
-Salle d'arcade en 3D :
-- Une salle avec plusieurs bornes, allumées ou éteintes. On en ajoute, on compose sa salle.
-- Chaque borne fait tourner une carte de la borne actuelle : son image devient l'écran de la borne, son son devient une source 3D.
-- Les bornes allumées tournent en mode démo. On s'approche d'une borne, on prend la manette, on joue.
-- Rendu FMeX, effet d'écran cathodique. Un exemple à part (`samples/ArcadeRoom`) : la borne simple reste sans FMeX.
-- Bornes aux couleurs de RetroLab : les décors d'origine des fabricants ne sont pas reproduits.

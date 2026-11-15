@@ -10,7 +10,8 @@ unit Arcade.Cabinet.Controls;
 ///    player 1 : arrows, X / Space / Ctrl = button 1, Z / Alt = button 2, C = button 3 ; gamepad 1
 ///    player 2 : R F D G, A = button 1, S = button 2, Q = button 3 ; gamepad 2
 ///    5 / 6 coin 1 / 2 (pad Back), 1 / 2 start 1 / 2 (pad Start), F2 service
-///  Cabinet keys (M, P, F1, F3, Esc) are reserved : they can't be bound to a switch.
+///  Cabinet keys (M, P, V, F1, F3, Esc) are reserved : they can't be bound to a switch.
+///  [General] Rumble=0 switches the gamepad vibrations off (V in game toggles and saves it).
 ///  Windows only.
 
 interface
@@ -55,6 +56,8 @@ type
   public
     /// Show the controls overlay when the cabinet is switched on.
     ShowAtStart: Boolean;
+    /// Gamepads vibrate with the cabinet's motors (wheel shaker, moving seat).
+    Rumble: Boolean;
     constructor Create;
     destructor Destroy; override;
     /// Once per frame, before anything reads the panel (gamepads).
@@ -176,7 +179,8 @@ end;
 
 function IsReservedKey(aVk: Integer): Boolean;
 begin
-  Result := (aVk = VK_ESCAPE) or (aVk = VK_F1) or (aVk = VK_F3) or (aVk = Ord('M')) or (aVk = Ord('P'));
+  Result := (aVk = VK_ESCAPE) or (aVk = VK_F1) or (aVk = VK_F3) or (aVk = Ord('M')) or (aVk = Ord('P'))
+    or (aVk = Ord('V'));
 end;
 
 // Keys a capture may return : no mouse buttons, generic Shift / Ctrl / Alt only (not their
@@ -324,6 +328,7 @@ begin
   inherited Create;
   FPads := TCabinetGamepads.Create;
   ShowAtStart := True;
+  Rumble := True;
   SetDefaults;
 end;
 
@@ -524,6 +529,7 @@ begin
   lIni := TMemIniFile.Create(aFile, TEncoding.UTF8);
   try
     ShowAtStart := lIni.ReadBool('General', 'ShowAtStart', True);
+    Rumble := lIni.ReadBool('General', 'Rumble', True);
     for lAction := Low(TCabinetAction) to High(TCabinetAction) do
       if lIni.ValueExists(CSection, ActionId(lAction)) then
       begin
@@ -548,6 +554,7 @@ begin
   lTokens := TStringList.Create;
   try
     lIni.WriteBool('General', 'ShowAtStart', ShowAtStart);
+    lIni.WriteBool('General', 'Rumble', Rumble);
     for lAction := Low(TCabinetAction) to High(TCabinetAction) do
     begin
       lTokens.Clear;

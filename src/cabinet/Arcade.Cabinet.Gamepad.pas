@@ -6,7 +6,8 @@ unit Arcade.Cabinet.Gamepad;
 ///      cabinet plays on the keyboard ;
 ///    - an empty port is only re-probed every 2 s (XInputGetState on an empty port costs ~0.5 ms) ;
 ///    - the left stick is folded into the d-pad bits (radial dead zone, 8 directions), the
-///      triggers into two spare bits : a pad is one Word of buttons, nothing analog.
+///      triggers into two spare bits : a pad is one Word of buttons, nothing analog ;
+///    - the two rumble motors follow the board's force feedback (wheel shaker...).
 ///  Windows only.
 
 interface
@@ -42,6 +43,7 @@ type
     FPrev: array[0..CPadMax - 1] of Word;
     FConnected: array[0..CPadMax - 1] of Boolean;
     FRetry: array[0..CPadMax - 1] of Integer;   // frames before re-probing an empty port
+    FMotors: array[0..CPadMax - 1] of Cardinal;  // last speeds sent : heavy shl 16 or light
   public
     constructor Create;
     /// Once per frame.
@@ -52,6 +54,9 @@ type
     function Buttons(aPad: Integer): Word;
     /// Rising edges of this frame.
     function Pressed(aPad: Integer): Word;
+    /// Rumble motors, 0..1 each ; only sent to the pad when the speeds change.
+    procedure SetRumble(aPad: Integer; aHeavy, aLight: Single);
+    procedure StopRumble;
     class function Available: Boolean; static;
   end;
 
@@ -68,6 +73,10 @@ type
     Gamepad: TXInputGamepad;
   end;
   TXInputGetState = function(dwUserIndex: DWORD; var pState: TXInputState): DWORD; stdcall;
+  TXInputVibration = record
+    wLeftMotorSpeed, wRightMotorSpeed: Word;
+  end;
+  TXInputSetState = function(dwUserIndex: DWORD; var pVibration: TXInputVibration): DWORD; stdcall;
 
 const
   CRetryFrames = 120;
@@ -78,6 +87,7 @@ const
 var
   GLib: HMODULE = 0;
   GGetState: TXInputGetState = nil;
+  GSetState: TXInputSetState = nil;
   GTried: Boolean = False;
 
 procedure EnsureLoaded;
@@ -96,7 +106,22 @@ begin
       Break;
   end;
   if GLib <> 0 then
+  begin
     GGetState := GetProcAddress(GLib, 'XInputGetState');
+    GSetState := GetProcAddress(GLib, 'XInputSetState');
+  end;
+end;
+
+procedure StopAllMotors;
+var
+  lStop: TXInputVibration;
+  i: Integer;
+begin
+  if not Assigned(GSetState) then
+    Exit;
+  lStop := Default(TXInputVibration);
+  for i := 0 to CPadMax - 1 do
+    GSetState(DWORD(i), lStop);
 end;
 
 // Radial dead zone, then the direction of the unit vector : no dead cross, exact diagonals.
@@ -190,6 +215,32 @@ begin
     Result := 0;
 end;
 
+procedure TCabinetGamepads.SetRumble(aPad: Integer; aHeavy, aLight: Single);
+var
+  lVib: TXInputVibration;
+  lKey: Cardinal;
+begin
+  if not Assigned(GSetState) or not Connected(aPad) then
+    Exit;
+  if aHeavy < 0 then aHeavy := 0 else if aHeavy > 1 then aHeavy := 1;
+  if aLight < 0 then aLight := 0 else if aLight > 1 then aLight := 1;
+  lVib.wLeftMotorSpeed := Round(aHeavy * 65535);
+  lVib.wRightMotorSpeed := Round(aLight * 65535);
+  lKey := (Cardinal(lVib.wLeftMotorSpeed) shl 16) or lVib.wRightMotorSpeed;
+  if lKey = FMotors[aPad] then
+    Exit;
+  FMotors[aPad] := lKey;
+  GSetState(DWORD(aPad), lVib);
+end;
+
+procedure TCabinetGamepads.StopRumble;
+var
+  i: Integer;
+begin
+  for i := 0 to CPadMax - 1 do
+    SetRumble(i, 0, 0);
+end;
+
 function TCabinetGamepads.Pressed(aPad: Integer): Word;
 begin
   if Connected(aPad) then
@@ -201,6 +252,7 @@ end;
 initialization
 
 finalization
+  StopAllMotors;
   if GLib <> 0 then
     FreeLibrary(GLib);
 

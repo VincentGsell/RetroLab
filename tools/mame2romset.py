@@ -1,20 +1,22 @@
 """Generates a romsets/ Delphi unit from a MAME driver source.
 
-    python -I mame2romset.py <driver.cpp> <board family> <unit name> <set> [<set> ...]
+    python -I mame2romset.py <driver.cpp> <board family> <unit name> [--skip-region=<name>] <set> [<set> ...]
 
-Reads ROM_START( set ) ... ROM_END blocks (ROM_REGION + ROM_LOAD only) and the GAME( ... ) lines
-(year, parent, maker, title), and writes the Pascal unit to stdout. Copying CRCs by hand is how
+Reads ROM_START( set ) ... ROM_END blocks (ROM_REGION, ROM_LOAD, ROM_LOAD16_BYTE, ROM_LOAD32_BYTE, ROM_RELOAD) and the GAME( ... ) / GAMEL( ... ) lines
+(year, parent, maker, title), and writes the Pascal unit to stdout. --skip-region drops a region the
+emulation doesn't use (PAL dumps 'plds' are often missing from sets : requiring them would refuse a good set). Copying CRCs by hand is how
 cartridges end up silently wrong ; generating them keeps the unit identical to the MAME reference.
 """
 import re
 import sys
 
 src_file, board, unit = sys.argv[1], sys.argv[2], sys.argv[3]
-wanted = sys.argv[4:]
+skip = [a.split('=', 1)[1] for a in sys.argv[4:] if a.startswith('--skip-region=')]
+wanted = [a for a in sys.argv[4:] if not a.startswith('--')]
 src = open(src_file, encoding='utf-8').read()
 
 games = {}
-for m in re.finditer(r'^GAME\(\s*(\d+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,[^,]*,[^,]*,[^,]*,[^,]*,\s*\w+\s*,\s*"([^"]*)"\s*,\s*"([^"]*)"', src, re.M):
+for m in re.finditer(r'^GAMEL?\(\s*(\d+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,[^,]*,[^,]*,[^,]*,[^,]*,\s*\w+\s*,\s*"([^"]*)"\s*,\s*"([^"]*)"', src, re.M):
     year, name, parent, maker, title = m.groups()
     games[name] = dict(year=year, parent='' if parent == '0' else parent, maker=maker, title=title)
 
@@ -22,6 +24,11 @@ blocks = {m.group(1): m.group(2) for m in re.finditer(r'ROM_START\(\s*(\w+)\s*\)
 
 def pas(s):
     return s.replace("'", "''")
+
+def addfile(name, region, ofs, size, crc, step):
+    if step == 1:
+        return "  lSet.AddFile('%s', '%s', $%X, $%X, $%s);" % (pas(name), region, ofs, size, crc)
+    return "  lSet.AddFile('%s', '%s', $%X, $%X, $%s, %d);" % (pas(name), region, ofs, size, crc, step)
 
 out = []
 out.append('unit %s;' % unit)
@@ -52,18 +59,31 @@ for s in wanted:
     out.append("  lSet := TRomSetDef.Create('%s', '%s', '%s', '%s', '%s', '%s');"
                % (s, g['parent'], pas(g['title']), g['year'], pas(g['maker']), board))
     region = None
+    last = None
     for line in body.splitlines():
         line = line.strip()
-        m = re.match(r'ROM_REGION\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*"(\w+)"\s*,\s*([^)]*)\)', line)
+        m = re.match(r'ROM_REGION(?:16|32)?(?:_LE|_BE)?\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*"(\w+)"\s*,\s*([^)]*)\)', line)
         if m:
             size, region, flags = int(m.group(1), 0), m.group(2), m.group(3)
             fill = '$FF' if 'ERASEFF' in flags else '0'
+            if region in skip:
+                continue
             out.append("  lSet.AddRegion('%s', $%X, %s);" % (region, size, fill))
             continue
-        m = re.match(r'ROM_LOAD\(\s*"([^"]+)"\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(?:BAD_DUMP\s*)?CRC\(([0-9a-fA-F]{8})\)', line)
+        m = re.match(r'ROM_LOAD(|16_BYTE|32_BYTE)\(\s*"([^"]+)"\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(?:BAD_DUMP\s*)?CRC\(([0-9a-fA-F]{8})\)', line)
         if m:
-            name, ofs, size, crc = m.group(1), int(m.group(2), 0), int(m.group(3), 0), m.group(4).upper()
-            out.append("  lSet.AddFile('%s', '%s', $%X, $%X, $%s);" % (pas(name), region, ofs, size, crc))
+            step = {'': 1, '16_BYTE': 2, '32_BYTE': 4}[m.group(1)]
+            name, ofs, size, crc = m.group(2), int(m.group(3), 0), int(m.group(4), 0), m.group(5).upper()
+            if region in skip:
+                continue
+            last = (name, size, crc, step)
+            out.append(addfile(name, region, ofs, size, crc, step))
+            continue
+        m = re.match(r'ROM_RELOAD\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*\)', line)
+        if m and last:
+            if region in skip:
+                continue
+            out.append(addfile(last[0], region, int(m.group(1), 0), last[1], last[2], last[3]))
             continue
         if line.startswith('ROM_'):
             raise SystemExit('%s : unsupported line %s' % (s, line))

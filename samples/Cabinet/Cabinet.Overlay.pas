@@ -27,7 +27,7 @@ uses
 
 const
   CAuthor = 'Vincent Gsell';
-  CReleaseDate = '2026-10-24';   // to update at each release
+  CReleaseDate = '2026-11-15';   // to update at each release
 
 type
   TCabinetOverlay = class
@@ -236,7 +236,7 @@ begin
     lLines.Add(Tr('overlay.help1', 'Up/Down select   Enter (A) add   Del (X) clear'));
     lLines.Add(Tr('overlay.help2', 'F5 factory wiring   Esc / F1 / Start : PLAY'));
     lLines.Add('');
-    lLines.Add(Tr('overlay.help3', 'In game : F1 controls, M sound, P pause, F3 reset, Esc game menu'));
+    lLines.Add(Tr('overlay.help3', 'In game : F1 controls, M sound, V vibrations, P pause, F3 reset, Esc game menu'));
     FText.Text := lLines.Text;
   finally
     lLines.Free;

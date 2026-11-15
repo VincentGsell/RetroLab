@@ -33,6 +33,7 @@ type
     Offset: Integer;
     Size: Integer;
     Crc: UInt32;
+    Step: Integer;     // 1 = contiguous ; 2 / 4 = MAME ROM_LOAD16_BYTE / ROM_LOAD32_BYTE interleave
   end;
 
   /// Declaration of a set (static description, registered by the romsets/ units).
@@ -48,7 +49,7 @@ type
     Files: TArray<TRomFileDef>;
     constructor Create(const aName, aParent, aTitle, aYear, aMaker, aBoard: string);
     procedure AddRegion(const aName: string; aSize: Integer; aFill: Byte = 0);
-    procedure AddFile(const aName, aRegion: string; aOffset, aSize: Integer; aCrc: UInt32);
+    procedure AddFile(const aName, aRegion: string; aOffset, aSize: Integer; aCrc: UInt32; aStep: Integer = 1);
   end;
 
   /// A loaded set : the cartridge plugged into a board.
@@ -107,7 +108,7 @@ begin
   Regions := Regions + [lRegion];
 end;
 
-procedure TRomSetDef.AddFile(const aName, aRegion: string; aOffset, aSize: Integer; aCrc: UInt32);
+procedure TRomSetDef.AddFile(const aName, aRegion: string; aOffset, aSize: Integer; aCrc: UInt32; aStep: Integer);
 var
   lFile: TRomFileDef;
 begin
@@ -115,6 +116,7 @@ begin
   lFile.Region := aRegion;
   lFile.Offset := aOffset;
   lFile.Size := aSize;
+  lFile.Step := aStep;
   lFile.Crc := aCrc;
   Files := Files + [lFile];
 end;
@@ -283,7 +285,11 @@ begin
           raise ERomSet.Create(TrFmt('romset.err.file', 'Set %s : file %s (CRC %.8x, %d bytes) missing or corrupt in %s',
             [lDef.Name, lFile.Name, lFile.Crc, lFile.Size, lSources.CommaText]));
         lRegion := Result.Region(lFile.Region);
-        Move(lBytes[0], lRegion[lFile.Offset], lFile.Size);
+        if lFile.Step <= 1 then
+          Move(lBytes[0], lRegion[lFile.Offset], lFile.Size)
+        else
+          for z := 0 to lFile.Size - 1 do
+            lRegion[lFile.Offset + z * lFile.Step] := lBytes[z];
       end;
       Result.FSource := lSources.CommaText;
     except

@@ -36,7 +36,7 @@
         <div class="badge" aria-hidden="true">2P</div>
         <div>
           <p>1943 se joue à deux en même temps, en coopération, une manette chacun.</p>
-          <p>1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.</p>
+          <p>1942, Commando, Gun.Smoke et Ghosts'n Goblins se jouent à deux chacun son tour, comme sur la borne.</p>
           <p>Manette Xbox ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi. F1 affiche les commandes et permet de les changer.</p>
         </div>
       </div>
@@ -49,6 +49,8 @@
         <div class="panel game"><h3>Commando</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
         <div class="panel game"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
         <div class="panel game"><h3>1943</h3><p>Capcom, 1987</p><p class="mode">2 joueurs en même temps</p></div>
+        <div class="panel game"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
+        <div class="panel game"><h3>OutRun</h3><p>Sega, 1986</p><p class="mode">1 joueur, au volant, la manette vibre</p></div>
       </div>
     </section>
 
@@ -56,7 +58,7 @@
       <h2>Le projet</h2>
       <ul>
         <li>C'est un travail en cours.</li>
-        <li>Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces quatre jeux.</li>
+        <li>Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces six jeux.</li>
         <li>Elle est déterministe : les mêmes entrées donnent toujours la même partie. Elle sert de référence pour la réécriture.</li>
       </ul>
       <p>La suite est dans le <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.md">plan de portage</a>.</p>
@@ -74,6 +76,8 @@
             <tr><td>Commando</td><td><code>roms/commando.zip</code></td><td>Commando (World)</td></tr>
             <tr><td>Gun.Smoke</td><td><code>roms/gunsmoke.zip</code></td><td>Gun.Smoke (World, 1985-11-15)</td></tr>
             <tr><td>1943</td><td><code>roms/1943.zip</code></td><td>1943: The Battle of Midway (Euro)</td></tr>
+            <tr><td>Ghosts'n Goblins</td><td><code>roms/gng.zip</code></td><td>Ghosts'n Goblins (World? set 1)</td></tr>
+            <tr><td>OutRun</td><td><code>roms/outrun.zip</code></td><td>Out Run (sitdown/upright, Rev B)</td></tr>
           </table>
         </div>
         <h3 style="margin-top:24px">2. Compiler</h3>
@@ -100,7 +104,7 @@ src/romsets       les cartouches : quels fichiers ROM, pour quelle carte</pre>
 
     <footer>
       <p>RetroLab, par Vincent Gsell. Licence MPL-2.0. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
-      <p>1942, Commando, Gun.Smoke et 1943 sont des marques de Capcom Co., Ltd. Ce projet n'est ni affilié à Capcom ni approuvé par Capcom, et ne contient aucune donnée de leurs jeux.</p>
+      <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun est une marque de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux, et ne contient aucune donnée de leurs jeux.</p>
     </footer>
   </main>
 </body>

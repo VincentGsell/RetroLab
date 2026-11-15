@@ -214,6 +214,7 @@ begin
   if FOptions.RecordFile <> '' then
     FRecord.SaveToFile(FOptions.RecordFile);
   FOverlay.Hide;
+  FControls.Pads.StopRumble;
   FBoard.AudioRate := 0;
   FreeAndNil(FBoard);
   FreeAndNil(FRoms);
@@ -261,7 +262,10 @@ begin
     FHoldInputs := True;
   end;
   if FOverlay.Visible then
+  begin
+    FControls.Pads.StopRumble;
     Exit;
+  end;
 
   if Focused then
   begin
@@ -274,6 +278,11 @@ begin
       FMuted := not FMuted;
     if FControls.KeyPressed(Ord('P')) then
       FPaused := not FPaused;
+    if FControls.KeyPressed(Ord('V')) then
+    begin
+      FControls.Rumble := not FControls.Rumble;
+      FControls.SaveToFile(FControlsFile);
+    end;
     if FControls.KeyPressed(VK_ESCAPE) then
     begin
       Unplug;
@@ -281,6 +290,8 @@ begin
       Exit;
     end;
   end;
+  if FPaused or not Focused or not FControls.Rumble then
+    FControls.Pads.StopRumble;
   if FPaused then
     Exit;
   if FHoldInputs then
@@ -291,6 +302,11 @@ begin
     FBoard.Inputs := FControls.Read(Focused);
   FRecord.Add(FBoard.Inputs);
   FBoard.RunFrame;
+  if Focused and FControls.Rumble then
+  begin
+    FControls.Pads.SetRumble(0, FBoard.Rumble[0].Heavy, FBoard.Rumble[0].Light);
+    FControls.Pads.SetRumble(1, FBoard.Rumble[1].Heavy, FBoard.Rumble[1].Light);
+  end;
   if Debug and ((FBoard.Frame mod 15) = 0) then
     Caption := Format('frame %d | focus %s | sys %.2x p1 %.2x', [FBoard.Frame,
       BoolToStr(Focused, True), Byte(FBoard.Inputs.System), Byte(FBoard.Inputs.Players[0])]);

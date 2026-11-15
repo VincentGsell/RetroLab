@@ -71,7 +71,7 @@
     "capture": "<< touche ou bouton... (Échap : annuler) >>",
     "help1": "Haut/Bas choisir   Entrée (A) ajouter   Suppr (X) effacer",
     "help2": "F5 câblage d'origine   Échap / F1 / Start : JOUER",
-    "help3": "En jeu : F1 commandes, M son, P pause, F3 reset, Échap menu des jeux"
+    "help3": "En jeu : F1 commandes, M son, V vibrations, P pause, F3 reset, Échap menu des jeux"
   },
 
   "controls": {

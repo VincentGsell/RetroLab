@@ -56,27 +56,51 @@ Rules:
 ## Roadmap
 
 Done:
-- Emulated cabinet: 1942, Commando, Gun.Smoke and 1943.
+- Emulated cabinet: 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins and OutRun.
 - Keyboard and gamepad controls, configurable.
 
-Porting 1942:
-1. Record a reference game: `Cabinet.exe --record game1.inp`.
-2. Routine interception by address on the Z80, RAM watcher.
-3. First native routines: score and random, checked frame by frame.
-4. Player, enemies, waves, bosses, until the game is fully native.
-5. Modernised code, FMeX renderer, data in JSON.
+Work order:
+1. RetroLab Room. It only uses the existing boards and lays the shared FMeX building blocks: up to 4 gamepads, sound, 60 Hz loop, CRT screen.
+2. Beloved 43. The simpler remake, built on those blocks.
+3. Tribute to Ghosts'n Goblins. Platforming, 4 players and camera: it benefits from Beloved 43.
+4. New boards, slotted in as the list of games to cover grows.
+5. Commodore 64.
+
+RetroLab Room, the 3D arcade room (`samples/RetroLabRoom`):
+- A separate program. Cabinet stays as it is.
+- A room with one cabinet per game of the catalog: 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins, OutRun.
+- ROM present: the cabinet is switched on, in attract mode. Click, play.
+- ROM missing: the cabinet is off, and a click says which file to add.
+- Each cabinet runs a board of the current cabinet: its picture becomes the screen, its sound a 3D source.
+- FMeX rendering, CRT screen effect, cabinets in RetroLab colours (the manufacturers' original artwork is not reproduced).
+
+Beloved 43, a tribute to 1943 in FMeX:
+- A game of its own, in the spirit of 1943: vertical shoot'em up, Pacific planes, energy bar, weapon pick-ups, giant bosses.
+- New 3D models, levels and music. The music evokes the era without reusing the original melodies. Nothing is taken from the ROM.
+- Two-player co-op, no ROM needed: anyone can download it and play.
+- The emulated cabinet is the reference for the feel: speed, wave rhythm, difficulty.
+- It becomes one more cabinet in RetroLab Room, always switched on.
+
+Tribute to Ghosts'n Goblins, in FMeX (name to be found):
+- A game of its own, in the spirit of Ghosts'n Goblins: platforming and shooting, a knight who loses his armour at the first hit, throwing weapons, graveyards and demons.
+- Everything is redrawn and the levels are new. Some echo the original ones, so the link is obvious.
+- 1 to 4 players at the same time.
+- Shared camera that pulls back as players spread out, up to a limit. Beyond it, the player left behind is brought back to the others.
+- Difficulty follows the number of players.
+- A fallen player can be revived by the others.
+- Enemies target the nearest player.
+- It also becomes a cabinet in RetroLab Room.
 
 New boards for the cabinet, from closest to what exists to heaviest:
 
 | Game | Hardware | To build | Effort |
 |---|---|---|---|
-| Ghosts'n Goblins (Capcom, 1985) | Motorola 6809, Z80 sound, 2 × YM2203 | 6809 chip and its test bench, board, cartridges | medium: YM2203 already there |
-| Ghouls'n Ghosts (Capcom, 1988) | CPS-1: 68000, Z80, YM2151, OKI MSM6295 | 68000, YM2151, MSM6295 chips; CPS-1 video (3 layers, sprites, priorities) | large, opens the whole CPS-1 library |
-| OutRun (Sega, 1986) | 2 × 68000, Z80, YM2151, SegaPCM, road generator, zoomed sprites | SegaPCM, Sega road and sprite zoom, analog controls | large |
+| Ghouls'n Ghosts (Capcom, 1988) | CPS-1: 68000, Z80, YM2151, OKI MSM6295 | MSM6295 chip; CPS-1 video (3 layers, sprites, priorities) | medium, opens the whole CPS-1 library |
 | Power Drift (Sega, 1988) | Y Board: 3 × 68000, rotated and zoomed sprites | sprite rotation and zoom | the heaviest |
 
-- The 68000 and the YM2151 serve Ghouls'n Ghosts, OutRun and Power Drift: each is written once.
-- OutRun and Power Drift are played with a wheel: the cabinet will need analog controls.
+- The 68000 and the YM2151, written for OutRun, also serve Ghouls'n Ghosts and Power Drift.
+- OutRun is played with buttons for now: progressive wheel on left / right, accelerator and brake on buttons 1 and 2, gear on button 3.
+- Analog stick and gamepad triggers will come with Power Drift.
 
 Commodore 64:
 - Play C64 games with modern gamepads, as with the cabinet: joystick and fire button on the gamepad, joystick 2 for two players.
@@ -84,10 +108,3 @@ Commodore 64:
 - Chips to write: 6510 (a 6502 variant) and its test bench, VIC-II video, SID sound, CIA 6526 (timers, joystick, keyboard).
 - Games load from `.prg` files and `.crt` cartridges. The 1541 disk drive comes later, if needed.
 - The C64 system ROMs (KERNAL, BASIC, characters) are provided by the user.
-
-3D arcade room:
-- A room with several cabinets, switched on or off. You add cabinets and build your own room.
-- Each cabinet runs a board of the current cabinet: its picture becomes the cabinet screen, its sound becomes a 3D source.
-- Switched-on cabinets run in attract mode. Walk up to one, take the gamepad, play.
-- FMeX rendering, CRT screen effect. A separate sample (`samples/ArcadeRoom`): the simple cabinet stays free of FMeX.
-- Cabinets in RetroLab colours: the manufacturers' original artwork is not reproduced.
