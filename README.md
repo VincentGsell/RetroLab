@@ -2,61 +2,66 @@
 
 *Classic Games, Retro Gaming Reimagined*
 
-**English** · [Français](README.fr.md)
+<p align="center"><b>🇫🇷 Français</b> &nbsp;|&nbsp; <a href="README.en.md">🇬🇧 English</a></p>
 
-Rewriting 1980s arcade games in modern Object Pascal, as code that both humans and AIs can read and reuse.
+Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un code que les humains comme les IA peuvent lire et réutiliser.
 
-## The project
+## Jouer
 
-- This is a work in progress.
-- Today: an arcade cabinet emulated in Delphi, which plays four Capcom games (1942, Commando, Gun.Smoke, 1943).
-- The emulated cabinet is the reference. It is deterministic: the same inputs always give the same game.
-- 1942 is then rewritten one routine at a time, each routine checked against the original, until no emulation is left.
-- The next versions are written in modern Pascal, on high-level libraries such as FMeX (rendering, 3D).
-- The goal is transferable code: readable, documented, reusable in other projects.
+- Quatre jeux d'arcade Capcom : 1942, Commando, Gun.Smoke et 1943.
+- À la manette Xbox, ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi.
+- À deux, c'est mieux. 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.
+- F1 affiche les commandes et permet de les changer.
 
-Steps and roadmap: [porting plan](PORTING_PLAN.md).
+## Le projet
 
-## ROMs: you provide them
+- C'est un travail en cours.
+- Aujourd'hui : une borne d'arcade émulée en Delphi, qui fait tourner ces quatre jeux.
+- La borne émulée sert de référence. Elle est déterministe : les mêmes entrées donnent toujours la même partie.
+- 1942 est ensuite réécrit une routine à la fois, chacune vérifiée contre l'original, jusqu'à ce qu'il ne reste plus d'émulation.
+- Les versions suivantes sont écrites en Pascal moderne, sur des bibliothèques de haut niveau comme FMeX (rendu, 3D).
+- Le but est un code transférable : lisible, documenté, réutilisable dans d'autres projets.
 
-No ROM is provided, and none may be added to this repository. Use your own ROM sets, in MAME format, and put them in a `roms/` folder at the root of the repository:
+Étapes et feuille de route : [plan de portage](PORTING_PLAN.md).
 
-| Game | File | MAME set |
+## Les ROMs : à fournir vous-même
+
+Aucune ROM n'est fournie, et aucune ne doit être ajoutée à ce dépôt. Utilisez vos propres sets de ROM, au format MAME, dans un dossier `roms/` à la racine du dépôt :
+
+| Jeu | Fichier | Set MAME |
 |---|---|---|
 | 1942 | `roms/1942.zip` | 1942 (Revision B) |
 | Commando | `roms/commando.zip` | Commando (World) |
 | Gun.Smoke | `roms/gunsmoke.zip` | Gun.Smoke (World, 1985-11-15) |
 | 1943 | `roms/1943.zip` | 1943: The Battle of Midway (Euro) |
 
-Every file is checked by its CRC32. A wrong or missing file is reported by name.
+Chaque fichier est contrôlé par son CRC32. Un fichier faux ou absent est signalé par son nom.
 
-## Build and play
+## Compiler et lancer
 
-1. Open `samples/Cabinet/Cabinet.dpr` in Delphi and compile for Win64. Every unit is listed in the `.dpr`: nothing to configure. Developed with Delphi 13.
-2. Run `Cabinet.exe` for 1942, or `Cabinet.exe --set commando`, `--set gunsmoke`, `--set 1943`.
-3. Plug in an Xbox gamepad (or any XInput gamepad), even while the game runs. The keyboard works too.
-4. F1 shows the controls and lets you change them.
+1. Ouvrir `samples/Cabinet/Cabinet.dpr` dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le `.dpr` : rien à configurer. Développé avec Delphi 13.
+2. Lancer `Cabinet.exe` pour 1942, ou `Cabinet.exe --set commando`, `--set gunsmoke`, `--set 1943`.
 
-## How the code is organised
+## Organisation du code
 
-The code follows the real machine: a cabinet, boards that plug into it, chips on the boards, and cartridges.
+Le code suit la vraie machine : une borne, des cartes qui s'y branchent, des puces sur les cartes, et des cartouches.
 
 ```
-samples/Cabinet   the cabinet: window, sound, controls
-src/cabinet       monitor, speaker, control panel, gamepads
-src/core          the edge connector every board plugs into, ROM loading
-src/boards        one unit per hardware board, named after its PCB number
-src/chips         Z80, AY-3-8910, YM2203, Intel 8751: reusable by any board
-src/romsets       the cartridges: which ROM files, for which board
+samples/Cabinet   la borne : fenêtre, son, commandes
+src/cabinet       écran, haut-parleur, panneau de commandes, manettes
+src/core          la prise où se branche chaque carte, chargement des ROM
+src/boards        une unité par carte, nommée d'après son numéro de PCB
+src/chips         Z80, AY-3-8910, YM2203, Intel 8751 : réutilisables par toute carte
+src/romsets       les cartouches : quels fichiers ROM, pour quelle carte
 ```
 
-- A board is named after its hardware (`Capcom84100`), never after a game.
-- A game only exists as a cartridge in `src/romsets`.
-- Adding a game on known hardware: one cartridge unit.
-- Adding hardware: one board unit, reusing the chips.
+- Une carte porte le nom de son matériel (`Capcom84100`), jamais celui d'un jeu.
+- Un jeu n'existe que sous forme de cartouche, dans `src/romsets`.
+- Ajouter un jeu sur un matériel connu : une unité de cartouche.
+- Ajouter un matériel : une unité de carte, qui réutilise les puces.
 
-The programs are in English or French (`--lang fr`). A translation is one JSON file in `lang/`.
+Les programmes sont en français ou en anglais (`--lang fr`, `--lang en`). Une traduction est un fichier JSON dans `lang/`.
 
-## License
+## Licence
 
-MPL-2.0 ([LICENSE](LICENSE)). Third-party code and trademarks: [NOTICE.md](NOTICE.md). The project uses a few units of the GS-Core library, included in `third_party/gs-core`.
+MPL-2.0 ([LICENSE](LICENSE)). Code tiers et marques : [NOTICE.md](NOTICE.md). Le projet utilise quelques unités de la bibliothèque GS-Core, incluses dans `third_party/gs-core`.

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetroLab</title>
+  <meta name="description" content="RetroLab: 1980s arcade games rewritten in modern Object Pascal. Two players, with gamepads.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate" hreflang="fr" href="index.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="lang" aria-label="Language">
+    <a href="index.html" hreflang="fr" lang="fr">FR</a>
+    <span aria-current="page">EN</span>
+  </nav>
+
+  <main class="wrap">
+    <header class="hero">
+      <img src="logo.svg" alt="RetroLab">
+      <p class="tagline">Classic Games, Retro Gaming Reimagined</p>
+      <p class="pitch">Rewriting 1980s arcade games in modern Object Pascal, as code that both humans and AIs can read and reuse.</p>
+      <p class="blink">BETTER WITH TWO!</p>
+      <div class="buttons">
+        <a class="btn primary" href="#play">Play</a>
+        <a class="btn" href="https://github.com/VincentGsell/RetroLab">Code on GitHub</a>
+      </div>
+    </header>
+
+    <section id="play">
+      <h2>Two players</h2>
+      <div class="panel duo">
+        <div class="badge" aria-hidden="true">2P</div>
+        <div>
+          <p>1943 is played by two at the same time, in co-op: one gamepad each, and you clear the sky together.</p>
+          <p>1942, Commando and Gun.Smoke are played by two in turns, as on the cabinet.</p>
+          <p>Xbox gamepad or any XInput gamepad, plugged in even while the game runs. The keyboard works too. F1 shows the controls and lets you change them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>The games</h2>
+      <div class="games">
+        <div class="panel game"><h3>1942</h3><p>Capcom, 1984</p><p class="mode">2 players, in turns</p></div>
+        <div class="panel game"><h3>Commando</h3><p>Capcom, 1985</p><p class="mode">2 players, in turns</p></div>
+        <div class="panel game"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="mode">2 players, in turns</p></div>
+        <div class="panel game"><h3>1943</h3><p>Capcom, 1987</p><p class="mode">2 players at the same time</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>The project</h2>
+      <ul>
+        <li>This is a work in progress.</li>
+        <li>Today: an arcade cabinet emulated in Delphi, which plays these four games.</li>
+        <li>The emulated cabinet is the reference. It is deterministic: the same inputs always give the same game.</li>
+        <li>1942 is then rewritten one routine at a time, each routine checked against the original, until no emulation is left.</li>
+        <li>The next versions are written in modern Pascal, on high-level libraries such as FMeX (rendering, 3D).</li>
+        <li>The goal is transferable code: readable, documented, reusable in other projects.</li>
+      </ul>
+      <p>Steps and roadmap: <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.en.md">porting plan</a>.</p>
+    </section>
+
+    <section>
+      <h2>Get started</h2>
+      <div class="panel">
+        <h3>1. ROMs: you provide them</h3>
+        <p>No ROM is provided. Use your own MAME sets, in a <code>roms/</code> folder at the root of the repository. Every file is checked by its CRC32.</p>
+        <div class="scroll">
+          <table>
+            <tr><th>Game</th><th>File</th><th>MAME set</th></tr>
+            <tr><td>1942</td><td><code>roms/1942.zip</code></td><td>1942 (Revision B)</td></tr>
+            <tr><td>Commando</td><td><code>roms/commando.zip</code></td><td>Commando (World)</td></tr>
+            <tr><td>Gun.Smoke</td><td><code>roms/gunsmoke.zip</code></td><td>Gun.Smoke (World, 1985-11-15)</td></tr>
+            <tr><td>1943</td><td><code>roms/1943.zip</code></td><td>1943: The Battle of Midway (Euro)</td></tr>
+          </table>
+        </div>
+        <h3 style="margin-top:24px">2. Build</h3>
+        <p>Open <code>samples/Cabinet/Cabinet.dpr</code> in Delphi and compile for Win64. Every unit is listed in the <code>.dpr</code>: nothing to configure. Developed with Delphi 13.</p>
+        <h3>3. Run</h3>
+        <p><code>Cabinet.exe</code> for 1942, or <code>Cabinet.exe --set commando</code>, <code>--set gunsmoke</code>, <code>--set 1943</code>.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>The code</h2>
+      <p>The code follows the real machine: a cabinet, boards that plug into it, chips on the boards, and cartridges.</p>
+<pre>samples/Cabinet   the cabinet: window, sound, controls
+src/cabinet       monitor, speaker, control panel, gamepads
+src/core          the edge connector every board plugs into, ROM loading
+src/boards        one unit per hardware board, named after its PCB number
+src/chips         Z80, AY-3-8910, YM2203, Intel 8751
+src/romsets       the cartridges: which ROM files, for which board</pre>
+      <ul>
+        <li>Adding a game on known hardware: one cartridge unit.</li>
+        <li>Adding hardware: one board unit, reusing the chips.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>RetroLab, by Vincent Gsell. MPL-2.0 license. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
+      <p>1942, Commando, Gun.Smoke and 1943 are trademarks of Capcom Co., Ltd. This project is not affiliated with or endorsed by Capcom, and contains no data from their games.</p>
+    </footer>
+  </main>
+</body>
+</html>

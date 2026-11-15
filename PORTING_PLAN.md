@@ -1,79 +1,79 @@
-# Porting plan: from the emulated cabinet to a modern native 1942
+# Plan de portage : de la borne émulée à un 1942 natif moderne
 
-**English** · [Français](PORTING_PLAN.fr.md)
+<p align="center"><b>🇫🇷 Français</b> &nbsp;|&nbsp; <a href="PORTING_PLAN.en.md">🇬🇧 English</a></p>
 
-## How 1942 is written (1984)
+## Comment 1942 est écrit (1984)
 
-- 72 KB of Z80 assembly, written the old way.
-- No OS, no memory allocation, no object tools.
-- The whole game state fits in 4 KB of RAM, readable at every frame. This is what makes the reconstruction possible.
+- 72 Ko d'assembleur Z80 écrits à l'ancienne.
+- Pas d'OS, pas de système d'allocation, pas d'outils objets.
+- Tout l'état du jeu tient dans 4 Ko de RAM, lisibles à chaque image. C'est ce qui rend la reconstruction possible.
 
-| In 1984 | Today |
+| En 1984 | Aujourd'hui |
 |---|---|
-| Written by hand | current tools and AI assistance |
-| Fixed addresses: score, player position, every enemy has its own slot (E000-EFFF) | variables, objects, allocations |
-| Slot tables: "enemy #7" = 16 bytes at one address, reused | lists of entities created / destroyed |
-| Everything driven by the vblank interrupt (RST 10h) | game loop with a time step |
-| State machines encoded as bytes | behaviours, scripts |
-| Waves and paths as tables in the ROM banks | level files, editors |
-| Integers, fixed point, BCD for the score | floating point |
-| Direct writes to video memory / sprite list | renderer receiving a scene |
+| Écrit à la main | outils actuels et assistance IA |
+| Adresses fixes : score, position du joueur, chaque ennemi ont leur case (E000-EFFF) | variables, objets, allocations |
+| Tableaux de slots : « l'ennemi n°7 » = 16 octets à une adresse, réutilisés | listes d'entités créées / détruites |
+| Tout piloté par l'interruption vblank (RST 10h) | boucle de jeu avec pas de temps |
+| Machines à états codées en octets | comportements, scripts |
+| Vagues et trajectoires en tables dans les banques de ROM | fichiers de niveau, éditeurs |
+| Entiers, virgule fixe, BCD pour le score | flottants |
+| Écriture directe en mémoire vidéo / liste de sprites | moteur de rendu qui reçoit une scène |
 
-## The method: the ship of Theseus
+## La méthode : le bateau de Thésée
 
-The game is replaced plank by plank while it runs.
-- The oracle is the emulated cabinet.
-- It is deterministic and computes a hash of its state at every frame.
-- After each plank is replaced, the hash must stay identical.
+On remplace le jeu planche par planche pendant qu'il tourne.
+- L'oracle est la borne émulée.
+- Elle est déterministe et calcule un hash de son état à chaque image.
+- Après chaque planche remplacée, le hash doit rester identique.
 
-1. Understand.
-   - Name the RAM by watching what moves (right: player X; enemy shot down: score, slot, explosion).
-   - A map of the code already tells which routine writes to which address.
-   - A live RAM watcher is still missing.
-2. Replace identically.
-   - Intercept a Z80 routine at its entry address and run its Pascal version on the same RAM.
-   - Replay a game: the hash must stay identical at every frame.
-   - Order: BCD score, random and collision, then player, enemies, waves and bosses.
-   - End of the step: the main CPU no longer runs any Z80 code.
-3. Modernise the code.
-   - Raw bytes, then typed structures (`TPlayer`, `TEnemy[n]`, `TWave`), then classes.
-   - The oracle then compares the observable state: score, positions, sprites.
-4. Separate the rendering.
-   - The logic produces a scene: sprites, background, text.
-   - Retro renderer identical, pixel for pixel, to the emulator's.
-   - Then a modernised FMeX renderer with swappable backgrounds: 1942 has no collision with the ground.
-5. Data and sound.
-   - Wave and path tables move from the ROM banks to JSON (gs-core), which can be edited.
-   - Sound first goes through the AY emulation, driven by the native game.
+1. Comprendre.
+   - On nomme la RAM en observant ce qui bouge (droite : X du joueur ; ennemi abattu : score, slot, explosion).
+   - Une cartographie du code dit déjà quelle routine écrit à quelle adresse.
+   - Il manque un observateur de RAM en direct.
+2. Remplacer à l'identique.
+   - On intercepte une routine Z80 à son adresse d'entrée et on exécute sa version Pascal sur la même RAM.
+   - On rejoue une partie : le hash doit rester identique à chaque image.
+   - Ordre : score BCD, aléatoire et collision, puis joueur, ennemis, vagues et boss.
+   - Fin de l'étape : le CPU principal n'exécute plus de Z80.
+3. Moderniser le code.
+   - Octets bruts, puis structures typées (`TPlayer`, `TEnemy[n]`, `TWave`), puis classes.
+   - L'oracle compare alors l'état observable : score, positions, sprites.
+4. Séparer le rendu.
+   - La logique produit une scène : sprites, décor, texte.
+   - Rendu rétro identique au pixel près à celui de l'émulateur.
+   - Puis rendu FMeX modernisé, avec un décor interchangeable : 1942 n'a aucune collision avec le sol.
+5. Données et son.
+   - Les tables de vagues et de trajectoires passent des banques de ROM à du JSON (gs-core), éditable.
+   - Le son passe d'abord par l'émulation AY, pilotée par le jeu natif.
 
-These steps suit AI tools well: every rewritten routine is checked automatically against the oracle.
+Ces étapes conviennent bien aux outils d'IA : chaque routine réécrite se vérifie automatiquement contre l'oracle.
 
-Rules:
-- Fixed 60 Hz step and integer maths as long as fidelity is the goal.
-- Modernising the gameplay comes afterwards, as a deliberate choice.
-- Nothing from Capcom is distributed. The native game reads graphics, sounds and tables from the user's own ROM, as the current cartridge loader does.
+Règles :
+- Pas fixe de 60 Hz et calculs entiers tant que la fidélité est l'objectif.
+- La modernisation du gameplay vient après, comme un choix assumé.
+- Rien de Capcom n'est distribué. Le jeu natif lit graphismes, sons et tables dans la ROM de l'utilisateur, comme le chargeur de cartouches actuel.
 
-## Roadmap
+## Feuille de route
 
-Done:
-- Emulated cabinet: 1942, Commando, Gun.Smoke and 1943.
-- Keyboard and gamepad controls, configurable.
+Fait :
+- Borne émulée : 1942, Commando, Gun.Smoke et 1943.
+- Commandes clavier et manette, configurables.
 
-Porting 1942:
-1. Record a reference game: `Cabinet.exe --record game1.inp`.
-2. Routine interception by address on the Z80, RAM watcher.
-3. First native routines: score and random, checked frame by frame.
-4. Player, enemies, waves, bosses, until the game is fully native.
-5. Modernised code, FMeX renderer, data in JSON.
+Portage de 1942 :
+1. Enregistrer une partie de référence : `Cabinet.exe --record partie1.inp`.
+2. Interception de routine par adresse sur le Z80, observateur de RAM.
+3. Premières routines natives : score et aléatoire, vérifiées image par image.
+4. Joueur, ennemis, vagues, boss, jusqu'au jeu entièrement natif.
+5. Code modernisé, rendu FMeX, données en JSON.
 
-New boards for the cabinet, from closest to what exists to heaviest:
+Nouvelles cartes pour la borne, de la plus proche de l'existant à la plus lourde :
 
-| Game | Hardware | To build | Effort |
+| Jeu | Matériel | À construire | Effort |
 |---|---|---|---|
-| Ghosts'n Goblins (Capcom, 1985) | Motorola 6809, Z80 sound, 2 × YM2203 | 6809 chip and its test bench, board, cartridges | medium: YM2203 already there |
-| Ghouls'n Ghosts (Capcom, 1988) | CPS-1: 68000, Z80, YM2151, OKI MSM6295 | 68000, YM2151, MSM6295 chips; CPS-1 video (3 layers, sprites, priorities) | large, opens the whole CPS-1 library |
-| OutRun (Sega, 1986) | 2 × 68000, Z80, YM2151, SegaPCM, road generator, zoomed sprites | SegaPCM, Sega road and sprite zoom, analog controls | large |
-| Power Drift (Sega, 1988) | Y Board: 3 × 68000, rotated and zoomed sprites | sprite rotation and zoom | the heaviest |
+| Ghosts'n Goblins (Capcom, 1985) | Motorola 6809, Z80 son, 2 × YM2203 | puce 6809 et son banc de test, carte, cartouches | moyen : YM2203 déjà là |
+| Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | puces 68000, YM2151, MSM6295 ; vidéo CPS-1 (3 plans, sprites, priorités) | gros, ouvre toute la ludothèque CPS-1 |
+| OutRun (Sega, 1986) | 2 × 68000, Z80, YM2151, SegaPCM, générateur de route, sprites zoomés | SegaPCM, route et zoom de sprites Sega, commandes analogiques | gros |
+| Power Drift (Sega, 1988) | Y Board : 3 × 68000, sprites tournés et zoomés | rotation et zoom des sprites | le plus lourd |
 
-- The 68000 and the YM2151 serve Ghouls'n Ghosts, OutRun and Power Drift: each is written once.
-- OutRun and Power Drift are played with a wheel: the cabinet will need analog controls.
+- Le 68000 et le YM2151 servent à Ghouls'n Ghosts, OutRun et Power Drift : ils s'écrivent une seule fois.
+- OutRun et Power Drift se jouent au volant : la borne devra gérer les commandes analogiques.

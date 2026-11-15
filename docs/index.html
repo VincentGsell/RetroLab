@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetroLab</title>
+  <meta name="description" content="RetroLab : les jeux d'arcade des années 80 réécrits en Pascal objet moderne. Jouable à deux, à la manette.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate" hreflang="en" href="en.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="lang" aria-label="Langue">
+    <span aria-current="page">FR</span>
+    <a href="en.html" hreflang="en" lang="en">EN</a>
+  </nav>
+
+  <main class="wrap">
+    <header class="hero">
+      <img src="logo.svg" alt="RetroLab">
+      <p class="tagline">Classic Games, Retro Gaming Reimagined</p>
+      <p class="pitch">Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un code que les humains comme les IA peuvent lire et réutiliser.</p>
+      <p class="blink">À DEUX, C'EST MIEUX !</p>
+      <div class="buttons">
+        <a class="btn primary" href="#jouer">Jouer</a>
+        <a class="btn" href="https://github.com/VincentGsell/RetroLab">Le code sur GitHub</a>
+      </div>
+    </header>
+
+    <section id="jouer">
+      <h2>Jouer à deux</h2>
+      <div class="panel duo">
+        <div class="badge" aria-hidden="true">2P</div>
+        <div>
+          <p>1943 se joue à deux en même temps, en coopération : une manette chacun, et on nettoie le ciel ensemble.</p>
+          <p>1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.</p>
+          <p>Manette Xbox ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi. F1 affiche les commandes et permet de les changer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Les jeux</h2>
+      <div class="games">
+        <div class="panel game"><h3>1942</h3><p>Capcom, 1984</p><p class="mode">2 joueurs, chacun son tour</p></div>
+        <div class="panel game"><h3>Commando</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
+        <div class="panel game"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
+        <div class="panel game"><h3>1943</h3><p>Capcom, 1987</p><p class="mode">2 joueurs en même temps</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Le projet</h2>
+      <ul>
+        <li>C'est un travail en cours.</li>
+        <li>Aujourd'hui : une borne d'arcade émulée en Delphi, qui fait tourner ces quatre jeux.</li>
+        <li>La borne émulée sert de référence. Elle est déterministe : les mêmes entrées donnent toujours la même partie.</li>
+        <li>1942 est ensuite réécrit une routine à la fois, chacune vérifiée contre l'original, jusqu'à ce qu'il ne reste plus d'émulation.</li>
+        <li>Les versions suivantes sont écrites en Pascal moderne, sur des bibliothèques de haut niveau comme FMeX (rendu, 3D).</li>
+        <li>Le but est un code transférable : lisible, documenté, réutilisable dans d'autres projets.</li>
+      </ul>
+      <p>Étapes et feuille de route : <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.md">plan de portage</a>.</p>
+    </section>
+
+    <section>
+      <h2>Démarrer</h2>
+      <div class="panel">
+        <h3>1. Les ROMs, à fournir vous-même</h3>
+        <p>Aucune ROM n'est fournie. Utilisez vos propres sets MAME, dans un dossier <code>roms/</code> à la racine du dépôt. Chaque fichier est contrôlé par son CRC32.</p>
+        <div class="scroll">
+          <table>
+            <tr><th>Jeu</th><th>Fichier</th><th>Set MAME</th></tr>
+            <tr><td>1942</td><td><code>roms/1942.zip</code></td><td>1942 (Revision B)</td></tr>
+            <tr><td>Commando</td><td><code>roms/commando.zip</code></td><td>Commando (World)</td></tr>
+            <tr><td>Gun.Smoke</td><td><code>roms/gunsmoke.zip</code></td><td>Gun.Smoke (World, 1985-11-15)</td></tr>
+            <tr><td>1943</td><td><code>roms/1943.zip</code></td><td>1943: The Battle of Midway (Euro)</td></tr>
+          </table>
+        </div>
+        <h3 style="margin-top:24px">2. Compiler</h3>
+        <p>Ouvrir <code>samples/Cabinet/Cabinet.dpr</code> dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le <code>.dpr</code> : rien à configurer. Développé avec Delphi 13.</p>
+        <h3>3. Lancer</h3>
+        <p><code>Cabinet.exe</code> pour 1942, ou <code>Cabinet.exe --set commando</code>, <code>--set gunsmoke</code>, <code>--set 1943</code>.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Le code</h2>
+      <p>Le code suit la vraie machine : une borne, des cartes qui s'y branchent, des puces sur les cartes, et des cartouches.</p>
+<pre>samples/Cabinet   la borne : fenêtre, son, commandes
+src/cabinet       écran, haut-parleur, panneau de commandes, manettes
+src/core          la prise où se branche chaque carte, chargement des ROM
+src/boards        une unité par carte, nommée d'après son numéro de PCB
+src/chips         Z80, AY-3-8910, YM2203, Intel 8751
+src/romsets       les cartouches : quels fichiers ROM, pour quelle carte</pre>
+      <ul>
+        <li>Ajouter un jeu sur un matériel connu : une unité de cartouche.</li>
+        <li>Ajouter un matériel : une unité de carte, qui réutilise les puces.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>RetroLab, par Vincent Gsell. Licence MPL-2.0. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
+      <p>1942, Commando, Gun.Smoke et 1943 sont des marques de Capcom Co., Ltd. Ce projet n'est ni affilié à Capcom ni approuvé par Capcom, et ne contient aucune donnée de leurs jeux.</p>
+    </footer>
+  </main>
+</body>
+</html>
