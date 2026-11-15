@@ -35,7 +35,7 @@
       <div class="panel duo">
         <div class="badge" aria-hidden="true">2P</div>
         <div>
-          <p>1943 is played by two at the same time, in co-op: one gamepad each, and you clear the sky together.</p>
+          <p>1943 is played by two at the same time, in co-op, one gamepad each.</p>
           <p>1942, Commando and Gun.Smoke are played by two in turns, as on the cabinet.</p>
           <p>Xbox gamepad or any XInput gamepad, plugged in even while the game runs. The keyboard works too. F1 shows the controls and lets you change them.</p>
         </div>
@@ -56,13 +56,10 @@
       <h2>The project</h2>
       <ul>
         <li>This is a work in progress.</li>
-        <li>Today: an arcade cabinet emulated in Delphi, which plays these four games.</li>
-        <li>The emulated cabinet is the reference. It is deterministic: the same inputs always give the same game.</li>
-        <li>1942 is then rewritten one routine at a time, each routine checked against the original, until no emulation is left.</li>
-        <li>The next versions are written in modern Pascal, on high-level libraries such as FMeX (rendering, 3D).</li>
-        <li>The goal is transferable code: readable, documented, reusable in other projects.</li>
+        <li>Today, an arcade cabinet emulated in Delphi plays these four games.</li>
+        <li>It is deterministic: the same inputs always give the same game. It is the reference for the rewrite.</li>
       </ul>
-      <p>Steps and roadmap: <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.en.md">porting plan</a>.</p>
+      <p>What comes next is in the <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.en.md">porting plan</a>.</p>
     </section>
 
     <section>

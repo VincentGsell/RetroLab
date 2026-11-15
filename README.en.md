@@ -10,19 +10,15 @@ Rewriting 1980s arcade games in modern Object Pascal, as code that both humans a
 
 - Four Capcom arcade games: 1942, Commando, Gun.Smoke and 1943.
 - With an Xbox gamepad, or any XInput gamepad, plugged in even while the game runs. The keyboard works too.
-- Better with two. 1943 is played by two at the same time, in co-op, one gamepad each. 1942, Commando and Gun.Smoke are played by two in turns, as on the cabinet.
+- Better with two: 1943 is played by two at the same time, in co-op, one gamepad each. 1942, Commando and Gun.Smoke are played by two in turns, as on the cabinet.
 - F1 shows the controls and lets you change them.
 
 ## The project
 
 - This is a work in progress.
-- Today: an arcade cabinet emulated in Delphi, which plays these four games.
-- The emulated cabinet is the reference. It is deterministic: the same inputs always give the same game.
-- 1942 is then rewritten one routine at a time, each routine checked against the original, until no emulation is left.
-- The next versions are written in modern Pascal, on high-level libraries such as FMeX (rendering, 3D).
-- The goal is transferable code: readable, documented, reusable in other projects.
-
-Steps and roadmap: [porting plan](PORTING_PLAN.en.md).
+- Today, an arcade cabinet emulated in Delphi plays these four games.
+- It is deterministic: the same inputs always give the same game. It is the reference for the rewrite.
+- What comes next is in the [porting plan](PORTING_PLAN.en.md).
 
 ## ROMs: you provide them
 

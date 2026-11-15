@@ -10,19 +10,15 @@ Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un cod
 
 - Quatre jeux d'arcade Capcom : 1942, Commando, Gun.Smoke et 1943.
 - À la manette Xbox, ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi.
-- À deux, c'est mieux. 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.
+- À deux, c'est mieux : 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando et Gun.Smoke se jouent à deux chacun son tour, comme sur la borne.
 - F1 affiche les commandes et permet de les changer.
 
 ## Le projet
 
 - C'est un travail en cours.
-- Aujourd'hui : une borne d'arcade émulée en Delphi, qui fait tourner ces quatre jeux.
-- La borne émulée sert de référence. Elle est déterministe : les mêmes entrées donnent toujours la même partie.
-- 1942 est ensuite réécrit une routine à la fois, chacune vérifiée contre l'original, jusqu'à ce qu'il ne reste plus d'émulation.
-- Les versions suivantes sont écrites en Pascal moderne, sur des bibliothèques de haut niveau comme FMeX (rendu, 3D).
-- Le but est un code transférable : lisible, documenté, réutilisable dans d'autres projets.
-
-Étapes et feuille de route : [plan de portage](PORTING_PLAN.md).
+- Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces quatre jeux.
+- Elle est déterministe : les mêmes entrées donnent toujours la même partie. Elle sert de référence pour la réécriture.
+- La suite est dans le [plan de portage](PORTING_PLAN.md).
 
 ## Les ROMs : à fournir vous-même
 
