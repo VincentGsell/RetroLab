@@ -1,7 +1,7 @@
 # Notices
 
 RetroLab (Classic Games, Retro Gaming Reimagined) — Copyright (C) 2026 Vincent Gsell.
-Licensed under the GNU General Public License v3.0 (see [LICENSE](LICENSE)).
+Licensed under the Mozilla Public License 2.0 (see [LICENSE](LICENSE)).
 
 ## No game data in this repository
 
@@ -19,7 +19,7 @@ affiliated with or endorsed by Capcom.
 |---|---|---|
 | Board timings, graphics layouts, sprite rendering, ROM set definitions (`src/boards/`, `src/romsets/`) | ported from / generated from the MAME drivers `capcom/1942.cpp`, `1942_v.cpp`, `commando.cpp`, `gunsmoke.cpp`, `1943.cpp` — copyright holders: Paul Leaman, Couriersud, Nicola Salmoria | BSD-3-Clause |
 | YM2203 FM model (`src/chips/Arcade.Chip.YM2203.pas`) | follows ymfm — Copyright (c) 2021, Aaron Giles | BSD-3-Clause |
-| `third_party/gs-core/` | GS-Core library units by Vincent Gsell (see the README there) | GNU GPL v3.0 (as part of this project) |
+| `third_party/gs-core/` | GS-Core library units by Vincent Gsell (see the README there) | MPL-2.0 (as part of this project) |
 
 BSD-3-Clause notice for the MAME and ymfm derived parts:
 
