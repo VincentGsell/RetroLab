@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RetroLab</title>
-  <meta name="description" content="RetroLab: 1980s arcade games rewritten in modern Object Pascal. Two players, with gamepads.">
+  <meta name="description" content="RetroLab: the emulation of 1980s arcade cabinets, rebuilt chip by chip in modern Object Pascal.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" hreflang="fr" href="index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,53 +23,92 @@
       <img src="logo.svg" alt="RetroLab">
       <p class="tagline">Classic Games, Retro Gaming Reimagined</p>
       <p class="pitch">Understanding and rewriting the emulation of 1980s arcade cabinets, chip by chip, in modern Object Pascal, as code that both humans and AIs can read and reuse.</p>
-      <p class="blink">BETTER WITH TWO!</p>
       <div class="buttons">
-        <a class="btn primary" href="#play">Play</a>
+        <a class="btn primary" href="#architecture">Architecture</a>
         <a class="btn" href="https://github.com/VincentGsell/RetroLab">Code on GitHub</a>
       </div>
     </header>
-
-    <section id="play">
-      <h2>Two players</h2>
-      <div class="panel duo">
-        <div class="badge" aria-hidden="true">2P</div>
-        <div>
-          <p>1943 is played by two at the same time, in co-op, one gamepad each.</p>
-          <p>1942, Commando, Gun.Smoke and Ghosts'n Goblins are played by two in turns, as on the cabinet.</p>
-          <p>Xbox gamepad or any XInput gamepad, plugged in even while the game runs. The keyboard works too. F1 shows the controls and lets you change them.</p>
-        </div>
-      </div>
-    </section>
 
     <section>
       <h2>The games</h2>
       <img class="shot" src="img/menu-en.png" alt="The RetroLab cabinet menu: six arcade games, ready to play">
       <div class="games">
-        <div class="panel game"><h3>1942</h3><p>Capcom, 1984</p><p class="mode">2 players, in turns</p></div>
-        <div class="panel game"><h3>Commando</h3><p>Capcom, 1985</p><p class="mode">2 players, in turns</p></div>
-        <div class="panel game"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="mode">2 players, in turns</p></div>
-        <div class="panel game"><h3>1943</h3><p>Capcom, 1987</p><p class="mode">2 players at the same time</p></div>
-        <div class="panel game"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="mode">2 players, in turns</p></div>
-        <div class="panel game"><h3>OutRun</h3><p>Sega, 1986</p><p class="mode">1 player, at the wheel, the gamepad vibrates</p></div>
+        <button type="button" class="panel game" data-board="capcom84100"><h3>1942</h3><p>Capcom, 1984</p><p class="board">Capcom84100 board</p></button>
+        <button type="button" class="panel game" data-board="capcom85605"><h3>Commando</h3><p>Capcom, 1985</p><p class="board">Capcom85605 board</p></button>
+        <button type="button" class="panel game" data-board="capcom85113"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="board">Capcom85113 board</p></button>
+        <button type="button" class="panel game" data-board="capcom85606"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="board">Capcom85606 board</p></button>
+        <button type="button" class="panel game" data-board="sega1715376"><h3>OutRun</h3><p>Sega, 1986</p><p class="board">Sega1715376 board</p></button>
+        <button type="button" class="panel game" data-board="capcombm"><h3>1943</h3><p>Capcom, 1987</p><p class="board">CapcomBM board</p></button>
+      </div>
+      <p class="note">Xbox gamepad or any XInput gamepad, or the keyboard; controls can be rewired with F1. Click a game to open its board in the architecture.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <p>The code follows the real machine. Each part is a Pascal unit, and each unit only knows its direct neighbours.</p>
+      <div class="flow">
+        <div class="box"><h3>The cabinet</h3><p>window, speaker, gamepads, menu</p><code>samples/Cabinet</code><code>src/cabinet</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>The connector</h3><p>player inputs in, picture and sound out, one frame at a time</p><code>Arcade.Board</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>The board</h3><p>the wiring: memory, interrupts, video</p><code>src/boards</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>The chips</h3><p>CPUs and sound, with no dependency</p><code>src/chips</code></div>
+      </div>
+      <div class="box cart"><h3>The cartridge</h3><p>which ROM files, at which address, for which board. Generated from MAME, every file checked by its CRC32.</p><code>src/romsets</code></div>
+      <ul>
+        <li>A board is named after its printed circuit (<code>Capcom84100</code>), never after a game.</li>
+        <li>Adding a game on a known board: one cartridge unit.</li>
+        <li>Adding a board: one board unit, reusing the chips.</li>
+        <li>The connector is the same for every board: the cabinet knows nothing about a Z80 or a 68000.</li>
+      </ul>
+
+      <h3 class="sub-title">The boards and their chips</h3>
+      <p>Pick a board: its chips light up. Pick a chip: the boards that use it light up.</p>
+      <div id="explorer" class="explorer">
+        <div class="col"><h4>Boards</h4><div class="boards"></div></div>
+        <div class="col"><h4>Chips</h4><div class="chips"></div></div>
+        <div class="panel detail" aria-live="polite"></div>
       </div>
     </section>
 
-    <section>
-      <h2>The project</h2>
+    <section id="image">
+      <h2>Picture fidelity</h2>
+      <p>An OutRun frame as the cabinet computes it, then the layers it is made of. Each layer comes from the same code as in the game, simply shown alone.</p>
+      <figure class="final">
+        <img class="pixels" src="img/outrun-all.png" width="320" height="224" alt="OutRun: the full picture, road, background, sprites and text">
+        <figcaption>The final picture, 320 × 224, unfiltered.</figcaption>
+      </figure>
+      <div class="layers">
+        <figure><img class="pixels" src="img/outrun-road.png" width="320" height="224" alt="The road layer"><figcaption><b>1. The road.</b> The sky is filled line by line by the road chip. Then two roads, mixed by the priority table of the original PAL: that is the fork.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-tiles.png" width="320" height="224" alt="The tile layers"><figcaption><b>2. The backgrounds.</b> Two System 16B tile layers: a 1024 × 512 window over 4 of 16 pages, scrolling per line and per column.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-sprites.png" width="320" height="224" alt="The sprites"><figcaption><b>3. The sprites.</b> Read from the double buffer, zoomed as the chip does it (steps of 1/512), with flipping, priority and shadow pixels.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-text.png" width="320" height="224" alt="The text layer"><figcaption><b>4. The text.</b> A 64 × 28 character grid, above the backgrounds; sprites go in front of it or behind it depending on their priority.</figcaption></figure>
+      </div>
       <ul>
-        <li>This is a work in progress.</li>
-        <li>Today, an arcade cabinet emulated in Delphi plays these six games.</li>
-        <li>It is deterministic: the same inputs always give the same game. It is the reference for the rewrite.</li>
+        <li>The picture is built line by line, in the order the hardware composes it: back road, rear background, front background, front road, text, sprites.</li>
+        <li>The 4096 colours are computed from the board's resistor network (3.9 kΩ, 2 kΩ, 1 kΩ, 500 Ω, 250 Ω), plus the 470 Ω resistor that gives shadow and hilight.</li>
+        <li>Scroll values are latched at line 261, as on the board: a change in the middle of a frame does not tear the background.</li>
       </ul>
-      <p>What comes next is in the <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.en.md">porting plan</a>.</p>
+    </section>
+
+    <section id="computing">
+      <h2>Computing fidelity</h2>
+      <ul>
+        <li><b>Z80</b>: the ZEXDOC and ZEXALL suites pass, 67 tests out of 67, undocumented opcodes and flags included.</li>
+        <li><b>68000</b>: 99.55 % of the 822,000 instructions of the SingleStepTests suite give the same registers, the same memory and the same cycle count as the real chip.</li>
+        <li><b>Synchronisation</b>: the CPUs of a board advance scanline by scanline, and interrupts fall on the same lines as on the original board.</li>
+        <li><b>Determinism</b>: with the same inputs, the whole board state (memories, registers) has the same fingerprint at every frame. A recorded game replays identically, and every code change is checked against these fingerprints.</li>
+        <li><b>Cartridges</b>: generated from MAME's definitions, every ROM file checked by its CRC32. A wrong file is refused by name.</li>
+      </ul>
+      <p>This is a work in progress. What comes next is in the <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.en.md">porting plan</a>.</p>
     </section>
 
     <section>
       <h2>Get started</h2>
       <div class="panel">
         <h3>1. ROMs: you provide them</h3>
-        <p>No ROM is provided. Use your own MAME sets, in a <code>roms/</code> folder at the root of the repository. Every file is checked by its CRC32.</p>
+        <p>No ROM is provided. Use your own MAME sets, in a <code>roms/</code> folder at the root of the repository.</p>
         <div class="scroll">
           <table>
             <tr><th>Game</th><th>File</th><th>MAME set</th></tr>
@@ -88,25 +127,11 @@
       </div>
     </section>
 
-    <section>
-      <h2>The code</h2>
-      <p>The code follows the real machine: a cabinet, boards that plug into it, chips on the boards, and cartridges.</p>
-<pre>samples/Cabinet   the cabinet: window, sound, controls
-src/cabinet       monitor, speaker, control panel, gamepads
-src/core          the edge connector every board plugs into, ROM loading
-src/boards        one unit per hardware board, named after its PCB number
-src/chips         Z80, AY-3-8910, YM2203, Intel 8751
-src/romsets       the cartridges: which ROM files, for which board</pre>
-      <ul>
-        <li>Adding a game on known hardware: one cartridge unit.</li>
-        <li>Adding hardware: one board unit, reusing the chips.</li>
-      </ul>
-    </section>
-
     <footer>
       <p>RetroLab, by Vincent Gsell. MPL-2.0 license. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
-      <p>1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins are trademarks of Capcom Co., Ltd. OutRun is a trademark of Sega Corporation. This project is not affiliated with or endorsed by Capcom or Sega, and contains no data from their games.</p>
+      <p>1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins are trademarks of Capcom Co., Ltd. OutRun is a trademark of Sega Corporation. This project is not affiliated with or endorsed by Capcom or Sega. The repository contains no ROM and no code from their games; the OutRun screenshots show the emulator running the original ROMs.</p>
     </footer>
   </main>
+  <script src="arch.js"></script>
 </body>
 </html>

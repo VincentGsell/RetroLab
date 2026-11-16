@@ -5,7 +5,8 @@ Licensed under the Mozilla Public License 2.0 (see [LICENSE](LICENSE)).
 
 ## No game data in this repository
 
-This repository contains **no ROM, no graphics, no sound and no code from any Capcom or Sega game**.
+This repository contains **no ROM, no sound and no code from any Capcom or Sega game**. The screenshots in `docs/img`
+show the emulator running the original ROMs.
 To run anything, you need ROM sets you are legally entitled to use, placed in `roms/`
 (see the README). Every file published here is automatically checked: none of them has the
 CRC32 of a ROM declared by the cartridge units.

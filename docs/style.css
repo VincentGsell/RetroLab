@@ -62,14 +62,6 @@ a:hover { color: var(--yellow); }
   margin: 24px 0 8px;
 }
 .pitch { max-width: 640px; margin: 16px auto; color: var(--text); }
-.blink {
-  font: 14px/1 var(--pixel);
-  color: #fff;
-  margin: 32px 0 8px;
-  animation: blink 1s steps(1) infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
 
 .buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 24px; }
 .btn {
@@ -100,22 +92,68 @@ li { margin: 6px 0; }
   padding: 20px 24px;
 }
 
-/* two players */
-.duo { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; border-color: var(--orange); }
-.badge {
-  font: 40px/1 var(--pixel);
-  color: var(--yellow);
-  text-shadow: 4px 4px 0 var(--red);
-  padding: 8px;
-}
-@media (max-width: 560px) { .duo { grid-template-columns: 1fr; text-align: center; } }
-
 /* games */
 .shot { display: block; width: 100%; max-width: 560px; margin: 0 auto 24px; border: 2px solid var(--panel-edge); }
 .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.game { border-top: 6px solid var(--orange); }
+.game {
+  border-top: 6px solid var(--orange);
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.game:hover, .game:focus-visible { border-color: var(--yellow); outline: none; }
 .game p { margin: 4px 0; color: var(--muted); font-size: 15px; }
-.game .mode { color: var(--cyan); }
+.game .board { color: var(--cyan); font-family: ui-monospace, Consolas, monospace; font-size: 14px; }
+.note { color: var(--muted); font-size: 15px; margin-top: 16px; }
+
+/* architecture */
+.flow { display: flex; align-items: stretch; gap: 8px; margin: 24px 0 12px; }
+.box {
+  flex: 1; background: var(--panel); border: 2px solid var(--panel-edge);
+  padding: 14px; display: flex; flex-direction: column; gap: 6px;
+}
+.box p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.4; flex: 1; }
+.box code { font-size: 13px; }
+.box.cart { border-color: var(--orange); margin-bottom: 16px; }
+.arrow { align-self: center; color: var(--orange); font-size: 22px; }
+@media (max-width: 720px) {
+  .flow { flex-direction: column; }
+  .arrow { transform: rotate(90deg); }
+}
+.sub-title { margin-top: 32px; }
+
+.explorer { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.explorer h4 { font: 11px/1.6 var(--pixel); color: var(--muted); margin: 0 0 8px; }
+.explorer .detail { grid-column: 1 / -1; min-height: 120px; }
+.item {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  width: 100%; margin: 0 0 6px; padding: 10px 12px;
+  background: var(--panel); border: 2px solid var(--panel-edge);
+  color: var(--text); font: 15px/1.3 var(--body); text-align: left; cursor: pointer;
+  transition: opacity 0.15s, border-color 0.15s;
+}
+.item .name { font-family: ui-monospace, Consolas, monospace; }
+.item .sub { color: var(--muted); font-size: 13px; }
+.item:hover { border-color: var(--yellow); }
+.item.on { border-color: var(--yellow); background: #24244a; }
+.item.linked { border-color: var(--orange); }
+.item.dim { opacity: 0.4; }
+.detail h3 { font-size: 13px; color: var(--yellow); }
+.detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0; font-size: 15px; }
+.detail dt { color: var(--orange); }
+.detail dd { margin: 0; }
+@media (max-width: 640px) {
+  .explorer { grid-template-columns: 1fr; }
+  .detail dl { grid-template-columns: 1fr; }
+  .detail dd { margin-bottom: 8px; }
+}
+
+/* image fidelity */
+figure { margin: 0; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; line-height: 1.45; }
+figcaption b { color: var(--text); }
+.pixels { display: block; width: 100%; height: auto; image-rendering: pixelated; border: 2px solid var(--panel-edge); background: #000; }
+.final { max-width: 640px; margin: 16px auto 24px; text-align: center; }
+.layers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 16px; }
+@media (max-width: 560px) { .layers { grid-template-columns: 1fr; } }
 
 table { border-collapse: collapse; width: 100%; font-size: 15px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--panel-edge); }

@@ -52,6 +52,10 @@ const
 type
   TMainPageKind = (mpMapper, mpRom, mpRam, mpPalette, mpIo, mpRoad);
 
+  /// The picture's layers, in drawing order : a tool can show them one at a time.
+  TSega5376Layer = (lyRoadBack, lyBackground, lyForeground, lyRoadFront, lyText, lySprites);
+  TSega5376Layers = set of TSega5376Layer;
+
   TMainPage = record
     Kind: TMainPageKind;
     Mem: PByte;
@@ -131,6 +135,8 @@ type
     Coinage, Dsw: Byte;
     Steering, Gas, Brake: Integer;   // ADC values 00-FF
     HighGear: Boolean;
+    /// Layers drawn (all by default).
+    Layers: TSega5376Layers;
     Shaker: Boolean;                 // wheel vibration motor
     BankMotor: Integer;              // moving cabinet : -7 (full left) .. +7 (full right)
 
@@ -321,6 +327,7 @@ begin
   FPcm := TSegaPCM.Create(C5376_SOUND_CLOCK, aRoms.Region('pcm'), 12);
   Coinage := C5376_COINAGE_DEFAULT;
   Dsw := C5376_DSW_DEFAULT;
+  Layers := [Low(TSega5376Layer)..High(TSega5376Layer)];
   Reset;
 end;
 

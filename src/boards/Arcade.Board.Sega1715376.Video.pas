@@ -362,12 +362,12 @@ begin
   begin
     FillChar(GLine, SizeOf(GLine), 0);
     FillChar(GPri, SizeOf(GPri), 0);
-    DrawRoadBackground(aBoard, y);
-    DrawLayer(aBoard, y, 1, $01, $02);
-    DrawLayer(aBoard, y, 0, $02, $04);
-    DrawRoadForeground(aBoard, y);
-    DrawText(aBoard, y);
-    MixSprites(y);
+    if lyRoadBack in aBoard.Layers then DrawRoadBackground(aBoard, y);
+    if lyBackground in aBoard.Layers then DrawLayer(aBoard, y, 1, $01, $02);
+    if lyForeground in aBoard.Layers then DrawLayer(aBoard, y, 0, $02, $04);
+    if lyRoadFront in aBoard.Layers then DrawRoadForeground(aBoard, y);
+    if lyText in aBoard.Layers then DrawText(aBoard, y);
+    if lySprites in aBoard.Layers then MixSprites(y);
     for x := 0 to W - 1 do
     begin
       aImage.Pixels[lPos] := aBoard.Palette[GLine[x]];

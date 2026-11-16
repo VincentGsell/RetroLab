@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RetroLab</title>
-  <meta name="description" content="RetroLab : les jeux d'arcade des années 80 réécrits en Pascal objet moderne. Jouable à deux, à la manette.">
+  <meta name="description" content="RetroLab : l'émulation des bornes d'arcade des années 80, reconstruite puce par puce en Pascal objet moderne.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" hreflang="en" href="en.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,53 +23,92 @@
       <img src="logo.svg" alt="RetroLab">
       <p class="tagline">Classic Games, Retro Gaming Reimagined</p>
       <p class="pitch">Comprendre et réécrire l'émulation des bornes d'arcade des années 80, puce par puce, en Pascal objet moderne, avec un code que les humains comme les IA peuvent lire et réutiliser.</p>
-      <p class="blink">À DEUX, C'EST MIEUX !</p>
       <div class="buttons">
-        <a class="btn primary" href="#jouer">Jouer</a>
+        <a class="btn primary" href="#architecture">L'architecture</a>
         <a class="btn" href="https://github.com/VincentGsell/RetroLab">Le code sur GitHub</a>
       </div>
     </header>
-
-    <section id="jouer">
-      <h2>Jouer à deux</h2>
-      <div class="panel duo">
-        <div class="badge" aria-hidden="true">2P</div>
-        <div>
-          <p>1943 se joue à deux en même temps, en coopération, une manette chacun.</p>
-          <p>1942, Commando, Gun.Smoke et Ghosts'n Goblins se jouent à deux chacun son tour, comme sur la borne.</p>
-          <p>Manette Xbox ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi. F1 affiche les commandes et permet de les changer.</p>
-        </div>
-      </div>
-    </section>
 
     <section>
       <h2>Les jeux</h2>
       <img class="shot" src="img/menu-fr.png" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer">
       <div class="games">
-        <div class="panel game"><h3>1942</h3><p>Capcom, 1984</p><p class="mode">2 joueurs, chacun son tour</p></div>
-        <div class="panel game"><h3>Commando</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
-        <div class="panel game"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
-        <div class="panel game"><h3>1943</h3><p>Capcom, 1987</p><p class="mode">2 joueurs en même temps</p></div>
-        <div class="panel game"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="mode">2 joueurs, chacun son tour</p></div>
-        <div class="panel game"><h3>OutRun</h3><p>Sega, 1986</p><p class="mode">1 joueur, au volant, la manette vibre</p></div>
+        <button type="button" class="panel game" data-board="capcom84100"><h3>1942</h3><p>Capcom, 1984</p><p class="board">carte Capcom84100</p></button>
+        <button type="button" class="panel game" data-board="capcom85605"><h3>Commando</h3><p>Capcom, 1985</p><p class="board">carte Capcom85605</p></button>
+        <button type="button" class="panel game" data-board="capcom85113"><h3>Gun.Smoke</h3><p>Capcom, 1985</p><p class="board">carte Capcom85113</p></button>
+        <button type="button" class="panel game" data-board="capcom85606"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="board">carte Capcom85606</p></button>
+        <button type="button" class="panel game" data-board="sega1715376"><h3>OutRun</h3><p>Sega, 1986</p><p class="board">carte Sega1715376</p></button>
+        <button type="button" class="panel game" data-board="capcombm"><h3>1943</h3><p>Capcom, 1987</p><p class="board">carte CapcomBM</p></button>
+      </div>
+      <p class="note">Manette Xbox ou toute manette XInput, ou clavier ; commandes reconfigurables avec F1. Un clic sur un jeu ouvre sa carte dans l'architecture.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>L'architecture</h2>
+      <p>Le code suit la vraie machine. Chaque pièce est une unité Pascal, et chaque unité ne connaît que ses voisines directes.</p>
+      <div class="flow">
+        <div class="box"><h3>La borne</h3><p>fenêtre, haut-parleur, manettes, menu</p><code>samples/Cabinet</code><code>src/cabinet</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>La prise</h3><p>entrées des joueurs, image et son, une image à la fois</p><code>Arcade.Board</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>La carte</h3><p>le câblage : mémoire, interruptions, vidéo</p><code>src/boards</code></div>
+        <div class="arrow" aria-hidden="true">⇄</div>
+        <div class="box"><h3>Les puces</h3><p>processeurs et son, sans dépendance</p><code>src/chips</code></div>
+      </div>
+      <div class="box cart"><h3>La cartouche</h3><p>quels fichiers ROM, à quelle adresse, pour quelle carte. Générée depuis MAME, chaque fichier contrôlé par son CRC32.</p><code>src/romsets</code></div>
+      <ul>
+        <li>Une carte porte le nom de son circuit imprimé (<code>Capcom84100</code>), jamais celui d'un jeu.</li>
+        <li>Ajouter un jeu sur une carte connue : une unité de cartouche.</li>
+        <li>Ajouter une carte : une unité de carte, qui réutilise les puces.</li>
+        <li>La prise est la même pour toutes les cartes : la borne ne sait rien d'un Z80 ou d'un 68000.</li>
+      </ul>
+
+      <h3 class="sub-title">Les cartes et leurs puces</h3>
+      <p>Choisissez une carte : ses puces s'allument. Choisissez une puce : les cartes qui l'utilisent s'allument.</p>
+      <div id="explorer" class="explorer">
+        <div class="col"><h4>Cartes</h4><div class="boards"></div></div>
+        <div class="col"><h4>Puces</h4><div class="chips"></div></div>
+        <div class="panel detail" aria-live="polite"></div>
       </div>
     </section>
 
-    <section>
-      <h2>Le projet</h2>
+    <section id="image">
+      <h2>La fidélité de l'image</h2>
+      <p>Une image d'OutRun, telle que la borne la calcule, puis les plans qui la composent. Chaque plan sort du même code que dans le jeu, simplement affiché seul.</p>
+      <figure class="final">
+        <img class="pixels" src="img/outrun-all.png" width="320" height="224" alt="OutRun : l'image complète, route, décor, sprites et textes">
+        <figcaption>L'image finale, 320 × 224, sans lissage.</figcaption>
+      </figure>
+      <div class="layers">
+        <figure><img class="pixels" src="img/outrun-road.png" width="320" height="224" alt="Le plan de la route"><figcaption><b>1. La route.</b> Le ciel est rempli ligne par ligne par la puce de route. Puis deux routes, mélangées par la table de priorité de la PAL d'origine : c'est la bifurcation.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-tiles.png" width="320" height="224" alt="Les plans de tuiles"><figcaption><b>2. Les décors.</b> Deux plans de tuiles System 16B : une fenêtre de 1024 × 512 sur 4 des 16 pages, défilement par ligne et par colonne.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-sprites.png" width="320" height="224" alt="Les sprites"><figcaption><b>3. Les sprites.</b> Lus dans le double tampon, zoomés comme le fait la puce (pas de 1/512), avec retournement, priorité et pixels d'ombre.</figcaption></figure>
+        <figure><img class="pixels" src="img/outrun-text.png" width="320" height="224" alt="Le plan de texte"><figcaption><b>4. Le texte.</b> Une grille de 64 × 28 caractères, au-dessus des décors ; les sprites passent devant ou derrière selon leur priorité.</figcaption></figure>
+      </div>
       <ul>
-        <li>C'est un travail en cours.</li>
-        <li>Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces six jeux.</li>
-        <li>Elle est déterministe : les mêmes entrées donnent toujours la même partie. Elle sert de référence pour la réécriture.</li>
+        <li>L'image est construite ligne par ligne, dans l'ordre où le matériel la compose : route du fond, décor arrière, décor avant, route de devant, texte, sprites.</li>
+        <li>Les 4096 couleurs sont calculées à partir du réseau de résistances de la carte (3,9 kΩ, 2 kΩ, 1 kΩ, 500 Ω, 250 Ω), plus la résistance de 470 Ω qui donne l'ombre et la surbrillance.</li>
+        <li>Les valeurs de défilement sont verrouillées à la ligne 261, comme sur la carte : un changement en cours d'image ne déchire pas le décor.</li>
       </ul>
-      <p>La suite est dans le <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.md">plan de portage</a>.</p>
+    </section>
+
+    <section id="calcul">
+      <h2>La fidélité du calcul</h2>
+      <ul>
+        <li><b>Z80</b> : les suites ZEXDOC et ZEXALL passent, 67 tests sur 67, opcodes et drapeaux non documentés compris.</li>
+        <li><b>68000</b> : 99,55 % des 822 000 instructions de la suite SingleStepTests donnent les mêmes registres, la même mémoire et le même nombre de cycles que la vraie puce.</li>
+        <li><b>Synchronisation</b> : les processeurs d'une carte avancent ligne d'écran par ligne d'écran, et les interruptions tombent sur les mêmes lignes que sur la carte d'origine.</li>
+        <li><b>Déterminisme</b> : à entrées identiques, l'état complet de la carte (mémoires, registres) a la même empreinte à chaque image. Une partie enregistrée se rejoue à l'identique, et chaque modification du code est vérifiée contre ces empreintes.</li>
+        <li><b>Cartouches</b> : générées depuis les définitions de MAME, chaque fichier ROM contrôlé par son CRC32. Un mauvais fichier est refusé avec son nom.</li>
+      </ul>
+      <p>C'est un travail en cours. La suite est dans le <a href="https://github.com/VincentGsell/RetroLab/blob/main/PORTING_PLAN.md">plan de portage</a>.</p>
     </section>
 
     <section>
       <h2>Démarrer</h2>
       <div class="panel">
         <h3>1. Les ROMs, à fournir vous-même</h3>
-        <p>Aucune ROM n'est fournie. Utilisez vos propres sets MAME, dans un dossier <code>roms/</code> à la racine du dépôt. Chaque fichier est contrôlé par son CRC32.</p>
+        <p>Aucune ROM n'est fournie. Utilisez vos propres sets MAME, dans un dossier <code>roms/</code> à la racine du dépôt.</p>
         <div class="scroll">
           <table>
             <tr><th>Jeu</th><th>Fichier</th><th>Set MAME</th></tr>
@@ -88,25 +127,11 @@
       </div>
     </section>
 
-    <section>
-      <h2>Le code</h2>
-      <p>Le code suit la vraie machine : une borne, des cartes qui s'y branchent, des puces sur les cartes, et des cartouches.</p>
-<pre>samples/Cabinet   la borne : fenêtre, son, commandes
-src/cabinet       écran, haut-parleur, panneau de commandes, manettes
-src/core          la prise où se branche chaque carte, chargement des ROM
-src/boards        une unité par carte, nommée d'après son numéro de PCB
-src/chips         Z80, AY-3-8910, YM2203, Intel 8751
-src/romsets       les cartouches : quels fichiers ROM, pour quelle carte</pre>
-      <ul>
-        <li>Ajouter un jeu sur un matériel connu : une unité de cartouche.</li>
-        <li>Ajouter un matériel : une unité de carte, qui réutilise les puces.</li>
-      </ul>
-    </section>
-
     <footer>
       <p>RetroLab, par Vincent Gsell. Licence MPL-2.0. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
-      <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun est une marque de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux, et ne contient aucune donnée de leurs jeux.</p>
+      <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun est une marque de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux. Le dépôt ne contient ni ROM ni code de leurs jeux ; les captures d'OutRun montrent l'émulateur faisant tourner les ROM d'origine.</p>
     </footer>
   </main>
+  <script src="arch.js"></script>
 </body>
 </html>
