@@ -10,10 +10,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script>try { var t = localStorage.getItem('retrolab-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="lang" aria-label="Language">
+    <button type="button" class="theme" data-to-light="Switch to the light theme" data-to-dark="Switch to the dark theme"></button>
     <a href="index.html" hreflang="fr" lang="fr">FR</a>
     <span aria-current="page">EN</span>
   </nav>
@@ -58,8 +60,8 @@
       <div class="box cart"><h3>The cartridge</h3><p>which ROM files, at which address, for which board. Generated from MAME, every file checked by its CRC32.</p><code>src/romsets</code></div>
       <ul>
         <li>A board is named after its printed circuit (for example <code>Capcom84100</code>). If a file is named after a game, you are reading a part that belongs to that game's own implementation.</li>
-        <li>Adding a game on a known board: one cartridge unit.</li>
-        <li>Adding a board: one board unit, reusing the chips.</li>
+        <li>To add a game on a board that is already emulated, you only write its cartridge unit.</li>
+        <li>To add a new board, you write a board unit that reuses the existing chips.</li>
         <li>The connector is the same for every board: the cabinet knows nothing about a Z80 or a 68000.</li>
       </ul>
 
@@ -132,6 +134,7 @@
       <p>1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins are trademarks of Capcom Co., Ltd. OutRun is a trademark of Sega Corporation. This project is not affiliated with or endorsed by Capcom or Sega. The repository contains no ROM and no code from their games; the OutRun screenshots show the emulator running the original ROMs.</p>
     </footer>
   </main>
+  <script src="theme.js"></script>
   <script src="arch.js"></script>
 </body>
 </html>

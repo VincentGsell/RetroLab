@@ -10,10 +10,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script>try { var t = localStorage.getItem('retrolab-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="lang" aria-label="Langue">
+    <button type="button" class="theme" data-to-light="Passer au thème clair" data-to-dark="Passer au thème sombre"></button>
     <span aria-current="page">FR</span>
     <a href="en.html" hreflang="en" lang="en">EN</a>
   </nav>
@@ -58,8 +60,8 @@
       <div class="box cart"><h3>La cartouche</h3><p>quels fichiers ROM, à quelle adresse, pour quelle carte. Générée depuis MAME, chaque fichier contrôlé par son CRC32.</p><code>src/romsets</code></div>
       <ul>
         <li>Une carte porte le nom de son circuit imprimé (exemple : <code>Capcom84100</code>). Si un fichier porte le nom d'un jeu, c'est que vous lisez une partie propre à l'implémentation de ce jeu.</li>
-        <li>Ajouter un jeu sur une carte connue : une unité de cartouche.</li>
-        <li>Ajouter une carte : une unité de carte, qui réutilise les puces.</li>
+        <li>Pour ajouter un jeu sur une carte déjà émulée, il suffit d'écrire son unité de cartouche.</li>
+        <li>Pour ajouter une nouvelle carte, on écrit une unité de carte qui réutilise les puces existantes.</li>
         <li>La prise est la même pour toutes les cartes : la borne ne sait rien d'un Z80 ou d'un 68000.</li>
       </ul>
 
@@ -132,6 +134,7 @@
       <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun est une marque de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux. Le dépôt ne contient ni ROM ni code de leurs jeux ; les captures d'OutRun montrent l'émulateur faisant tourner les ROM d'origine.</p>
     </footer>
   </main>
+  <script src="theme.js"></script>
   <script src="arch.js"></script>
 </body>
 </html>
