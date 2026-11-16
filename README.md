@@ -7,6 +7,8 @@
 
 Rewriting 1980s arcade games in modern Object Pascal, as code that both humans and AIs can read and reuse.
 
+<p align="center"><img src="docs/img/menu-en.png" width="560" alt="The RetroLab cabinet menu: six arcade games, ready to play"></p>
+
 ## Play
 
 - Six arcade games: 1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins by Capcom, OutRun by Sega.
@@ -72,6 +74,8 @@ MPL-2.0 ([LICENSE](LICENSE)). Third-party code and trademarks: [NOTICE.md](NOTIC
 <summary><b>🇫🇷 Français</b></summary>
 
 Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un code que les humains comme les IA peuvent lire et réutiliser.
+
+<p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
 
 ## Jouer
 

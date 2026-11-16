@@ -6,6 +6,7 @@ bin/
 *.dcu
 *.map
 *.png
+!docs/img/*.png
 # Code Capcom desassemble / annote : local uniquement
 analysis/
 # sorties de test
