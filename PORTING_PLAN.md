@@ -1,110 +1,69 @@
-# Plan de portage : de la borne émulée à un 1942 natif moderne
+# Feuille de route
 
 <p align="center"><b>🇫🇷 Français</b> &nbsp;|&nbsp; <a href="PORTING_PLAN.en.md">🇬🇧 English</a></p>
 
-## Comment 1942 est écrit (1984)
+## Ce qui est fait
 
-- 72 Ko d'assembleur Z80 écrits à l'ancienne.
-- Pas d'OS, pas de système d'allocation, pas d'outils objets.
-- Tout l'état du jeu tient dans 4 Ko de RAM, lisibles à chaque image. C'est ce qui rend la reconstruction possible.
+- La borne émulée fait tourner six jeux : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun de Sega.
+- Les processeurs Z80, MC6809 et MC68000 sont écrits, et chacun a son banc de test. Les puces son AY-3-8910, YM2203, YM2151 et la puce PCM de Sega sont écrites elles aussi.
+- On joue au clavier ou à la manette, et les commandes se configurent depuis la borne.
+- Dans OutRun, la manette vibre quand le volant de la borne d'origine vibrait.
 
-| En 1984 | Aujourd'hui |
-|---|---|
-| Écrit à la main | outils actuels et assistance IA |
-| Adresses fixes : score, position du joueur, chaque ennemi ont leur case (E000-EFFF) | variables, objets, allocations |
-| Tableaux de slots : « l'ennemi n°7 » = 16 octets à une adresse, réutilisés | listes d'entités créées / détruites |
-| Tout piloté par l'interruption vblank (RST 10h) | boucle de jeu avec pas de temps |
-| Machines à états codées en octets | comportements, scripts |
-| Vagues et trajectoires en tables dans les banques de ROM | fichiers de niveau, éditeurs |
-| Entiers, virgule fixe, BCD pour le score | flottants |
-| Écriture directe en mémoire vidéo / liste de sprites | moteur de rendu qui reçoit une scène |
+## L'ordre de travail
 
-## La méthode : le bateau de Thésée
+1. RetroLab Room, la salle d'arcade en 3D. Elle n'utilise que les cartes existantes, et c'est elle qui pose les briques FMeX dont les remakes auront besoin : jusqu'à quatre manettes, le son, une boucle à 60 Hz et un rendu d'écran cathodique.
+2. Beloved 43, le plus simple des remakes, qui reprend ces briques.
+3. L'hommage à Ghosts'n Goblins. Avec la plateforme, quatre joueurs et la caméra, c'est le plus exigeant, et il profitera de tout ce que Beloved 43 aura mis en place.
+4. De nouvelles cartes pour la borne, qui s'intercalent au fil de la liste des jeux à couvrir. Power Drift est la prochaine.
+5. Le Commodore 64.
 
-On remplace le jeu planche par planche pendant qu'il tourne.
-- L'oracle est la borne émulée.
-- Elle est déterministe et calcule un hash de son état à chaque image.
-- Après chaque planche remplacée, le hash doit rester identique.
+## RetroLab Room, la salle d'arcade en 3D
 
-1. Comprendre.
-   - On nomme la RAM en observant ce qui bouge (droite : X du joueur ; ennemi abattu : score, slot, explosion).
-   - Une cartographie du code dit déjà quelle routine écrit à quelle adresse.
-   - Il manque un observateur de RAM en direct.
-2. Remplacer à l'identique.
-   - On intercepte une routine Z80 à son adresse d'entrée et on exécute sa version Pascal sur la même RAM.
-   - On rejoue une partie : le hash doit rester identique à chaque image.
-   - Ordre : score BCD, aléatoire et collision, puis joueur, ennemis, vagues et boss.
-   - Fin de l'étape : le CPU principal n'exécute plus de Z80.
-3. Moderniser le code.
-   - Octets bruts, puis structures typées (`TPlayer`, `TEnemy[n]`, `TWave`), puis classes.
-   - L'oracle compare alors l'état observable : score, positions, sprites.
-4. Séparer le rendu.
-   - La logique produit une scène : sprites, décor, texte.
-   - Rendu rétro identique au pixel près à celui de l'émulateur.
-   - Puis rendu FMeX modernisé, avec un décor interchangeable : 1942 n'a aucune collision avec le sol.
-5. Données et son.
-   - Les tables de vagues et de trajectoires passent des banques de ROM à du JSON (gs-core), éditable.
-   - Le son passe d'abord par l'émulation AY, pilotée par le jeu natif.
+- C'est un programme à part (`samples/RetroLabRoom`). La borne actuelle, Cabinet, reste telle qu'elle est.
+- La salle contient une borne par jeu du catalogue.
+- Quand la ROM d'un jeu est présente, sa borne est allumée et tourne en mode démo. Un clic suffit pour jouer.
+- Quand la ROM manque, la borne est éteinte, et un clic indique quel fichier ajouter.
+- Chaque borne fait tourner la même carte émulée que Cabinet. Son image devient l'écran de la borne, et son son une source sonore placée dans la salle.
+- Le rendu se fait avec FMeX, avec un effet d'écran cathodique. Les bornes portent les couleurs de RetroLab, sans reproduire les décors des fabricants.
 
-Ces étapes conviennent bien aux outils d'IA : chaque routine réécrite se vérifie automatiquement contre l'oracle.
+## Les remakes en FMeX
 
-Règles :
-- Pas fixe de 60 Hz et calculs entiers tant que la fidélité est l'objectif.
-- La modernisation du gameplay vient après, comme un choix assumé.
-- Rien de Capcom n'est distribué. Le jeu natif lit graphismes, sons et tables dans la ROM de l'utilisateur, comme le chargeur de cartouches actuel.
+Ces jeux sont des programmes natifs, qui n'ont besoin d'aucune ROM. Ils rendent hommage aux originaux avec des graphismes, des niveaux et des musiques entièrement refaits. Chacun deviendra une borne de RetroLab Room, toujours allumée, et le menu de Cabinet les indiquera comme « binaire natif ».
 
-## Feuille de route
+### Beloved 43, hommage à 1943
 
-Fait :
-- Borne émulée : 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins et OutRun.
-- Commandes clavier et manette, configurables.
+- C'est un shoot'em up vertical dans l'esprit de 1943, avec des avions du Pacifique, une barre d'énergie, des armes à ramasser et des boss géants.
+- Les modèles 3D, les niveaux et la musique sont neufs. La musique évoque l'époque sans reprendre les mélodies d'origine.
+- On y joue à deux en coopération.
+- La borne émulée sert de référence pour retrouver les sensations du jeu : la vitesse, le rythme des vagues et la difficulté.
 
-Ordre de travail :
-1. RetroLab Room. Elle n'utilise que les cartes existantes et pose les briques FMeX communes : jusqu'à 4 manettes, son, boucle à 60 Hz, écran cathodique.
-2. Beloved 43. C'est le remake le plus simple, il reprend ces briques.
-3. Hommage à Ghosts'n Goblins. Plateforme, 4 joueurs et caméra : il profite de Beloved 43.
-4. Nouvelles cartes, intercalées au fil de la liste des jeux à couvrir.
-5. Commodore 64.
+### L'hommage à Ghosts'n Goblins (nom à trouver)
 
-RetroLab Room, la salle d'arcade en 3D (`samples/RetroLabRoom`) :
-- Un programme à part. Cabinet reste tel quel.
-- Une salle avec une borne par jeu du catalogue : 1942, Commando, Gun.Smoke, 1943, Ghosts'n Goblins, OutRun.
-- ROM présente : la borne est allumée, en mode démo. On clique, on joue.
-- ROM absente : la borne est éteinte, et un clic dit quel fichier mettre.
-- Chaque borne fait tourner une carte de la borne actuelle : son image devient l'écran, son son une source 3D.
-- Rendu FMeX, effet d'écran cathodique, bornes aux couleurs de RetroLab (les décors d'origine des fabricants ne sont pas reproduits).
+- C'est un jeu de plateforme et de tir dans l'esprit de Ghosts'n Goblins : un chevalier qui perd son armure au premier coup, des armes à lancer, des cimetières et des démons.
+- Tout est redessiné et les niveaux sont neufs. Certains rappellent ceux d'origine, pour que le lien avec le jeu soit évident.
+- On y joue de un à quatre joueurs en même temps.
+- La caméra est commune à tous et recule quand les joueurs s'écartent, jusqu'à une limite. Au-delà, le joueur resté en arrière est ramené vers les autres.
+- La difficulté s'adapte au nombre de joueurs, et un joueur tombé peut être relevé par ses partenaires.
+- Les ennemis s'en prennent au joueur le plus proche.
 
-Beloved 43, hommage à 1943 en FMeX :
-- Un jeu à part, dans l'esprit de 1943 : shoot'em up vertical, avions du Pacifique, barre d'énergie, armes à ramasser, boss géants.
-- Modèles 3D, niveaux et musique neufs. La musique évoque l'époque sans reprendre les mélodies d'origine. Rien n'est repris de la ROM.
-- Jouable à deux en coopération, sans aucune ROM : n'importe qui peut le télécharger et jouer.
-- La borne émulée sert de référence pour les sensations : vitesse, rythme des vagues, difficulté.
-- Il devient une borne de plus dans RetroLab Room, toujours allumée.
+### Power Drift en 3D
 
-Hommage à Ghosts'n Goblins, en FMeX (nom à trouver) :
-- Un jeu à part, dans l'esprit de Ghosts'n Goblins : plateforme et tir, un chevalier qui perd son armure au premier coup, armes à lancer, cimetières et démons.
-- Tout est redessiné et les niveaux sont neufs. Certains rappellent ceux d'origine, pour que le lien soit évident.
-- De 1 à 4 joueurs en simultané.
-- Caméra commune qui recule quand les joueurs s'écartent, jusqu'à une limite. Au-delà, le joueur à la traîne est ramené vers les autres.
-- La difficulté suit le nombre de joueurs.
-- Un joueur tombé peut être relevé par les autres.
-- Les ennemis visent le joueur le plus proche.
-- Il devient lui aussi une borne de RetroLab Room.
+- Une fois la carte de Power Drift émulée, le jeu aura aussi sa version FMeX, avec de vrais circuits en 3D.
 
-Nouvelles cartes pour la borne, de la plus proche de l'existant à la plus lourde :
+## Les nouvelles cartes pour la borne
 
-| Jeu | Matériel | À construire | Effort |
+| Jeu | Matériel | Ce qu'il reste à écrire | Effort |
 |---|---|---|---|
-| Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | puce MSM6295 ; vidéo CPS-1 (3 plans, sprites, priorités) | moyen, ouvre toute la ludothèque CPS-1 |
-| Power Drift (Sega, 1988) | Y Board : 3 × 68000, sprites tournés et zoomés | rotation et zoom des sprites | le plus lourd |
+| Power Drift (Sega, 1988) | Y Board : 3 × 68000, Z80, YM2151, PCM Sega | les puces de calcul et d'entrées-sorties de Sega, le plan de sprites tourné et incliné ligne par ligne, un second jeu de sprites System 16B | gros, à cause de la rotation |
+| Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | la puce MSM6295 et la vidéo CPS-1 (trois plans, sprites, priorités) | moyen, et il ouvre une grande partie de la ludothèque Capcom |
 
-- Le 68000 et le YM2151, écrits pour OutRun, servent aussi à Ghouls'n Ghosts et Power Drift.
-- OutRun se joue pour l'instant avec les boutons : volant progressif sur gauche / droite, accélérateur et frein sur les boutons 1 et 2, rapport sur le bouton 3.
-- Le stick et les gâchettes analogiques de la manette viendront avec Power Drift.
+- Le 68000 et le YM2151 ont été écrits pour OutRun, et ces deux cartes les réutilisent.
+- Pour l'instant, OutRun se joue avec les boutons : gauche et droite tournent le volant progressivement, les boutons 1 et 2 servent d'accélérateur et de frein, et le bouton 3 change de vitesse. Le stick et les gâchettes analogiques de la manette arriveront avec Power Drift, qui se joue lui aussi au volant.
 
-Commodore 64 :
-- Jouer aux jeux C64 avec les manettes modernes, comme pour la borne : joystick et touche feu sur la manette, joystick 2 pour jouer à deux.
-- Mettre en avant les jeux C64 récents, écrits et diffusés librement par des amateurs.
-- Puces à écrire : 6510 (variante du 6502) et son banc de test, vidéo VIC-II, son SID, CIA 6526 (minuteries, joystick, clavier).
-- Les jeux se chargent depuis des fichiers `.prg` et des cartouches `.crt`. Le lecteur de disquette 1541 vient plus tard, s'il le faut.
-- Les ROMs système du C64 (KERNAL, BASIC, caractères) sont à fournir par l'utilisateur.
+## Le Commodore 64
+
+- L'idée est de jouer aux jeux C64 avec des manettes modernes, comme sur la borne : le joystick et le bouton de tir passent sur la manette, et une seconde manette sert de joystick 2 pour jouer à deux.
+- On veut aussi mettre en avant les jeux C64 récents, écrits et diffusés librement par des amateurs.
+- Il faudra écrire le processeur 6510 (une variante du 6502) avec son banc de test, la vidéo VIC-II, le son SID et le CIA 6526, qui gère les minuteries, le joystick et le clavier.
+- Les jeux se chargeront depuis des fichiers `.prg` et des cartouches `.crt`. Le lecteur de disquette 1541 viendra plus tard, si le besoin s'en fait sentir.
+- Comme pour les jeux d'arcade, l'utilisateur fournit lui-même les ROM système du C64 (KERNAL, BASIC et jeu de caractères).

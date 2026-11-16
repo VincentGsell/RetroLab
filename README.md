@@ -28,7 +28,7 @@ Project goals:
 - This is a work in progress.
 - Today, an arcade cabinet emulated in Delphi plays these six games.
 - This cabinet is deterministic. With the same inputs it replays exactly the same game, which is how every code change gets checked.
-- What comes next is described in the [porting plan](PORTING_PLAN.en.md).
+- What comes next is described in the [roadmap](PORTING_PLAN.en.md).
 
 ## ROMs: you provide them
 
@@ -130,7 +130,7 @@ Buts du projet :
 - C'est un travail en cours.
 - Aujourd'hui, une borne d'arcade émulée en Delphi fait tourner ces six jeux.
 - Cette borne est déterministe. Avec les mêmes commandes, elle rejoue exactement la même partie, ce qui permet de vérifier chaque modification du code.
-- La suite du projet est décrite dans le [plan de portage](PORTING_PLAN.md).
+- La suite du projet est décrite dans la [feuille de route](PORTING_PLAN.md).
 
 ## Les ROMs : à fournir vous-même
 
