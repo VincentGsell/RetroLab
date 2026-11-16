@@ -57,7 +57,7 @@
       </div>
       <div class="box cart"><h3>The cartridge</h3><p>which ROM files, at which address, for which board. Generated from MAME, every file checked by its CRC32.</p><code>src/romsets</code></div>
       <ul>
-        <li>A board is named after its printed circuit (<code>Capcom84100</code>), never after a game.</li>
+        <li>A board is named after its printed circuit (for example <code>Capcom84100</code>). If a file is named after a game, you are reading a part that belongs to that game's own implementation.</li>
         <li>Adding a game on a known board: one cartridge unit.</li>
         <li>Adding a board: one board unit, reusing the chips.</li>
         <li>The connector is the same for every board: the cabinet knows nothing about a Z80 or a 68000.</li>
@@ -121,7 +121,7 @@
           </table>
         </div>
         <h3 style="margin-top:24px">2. Build</h3>
-        <p>Open <code>samples/Cabinet/Cabinet.dpr</code> in Delphi and compile for Win64. Every unit is listed in the <code>.dpr</code>: nothing to configure. Developed with Delphi 13.</p>
+        <p>Open <code>samples/Cabinet/Cabinet.dpr</code> in Delphi and compile for Win64. Every unit is listed in the <code>.dpr</code>, so there is nothing else to configure. The project is developed with Delphi 13.</p>
         <h3>3. Run</h3>
         <p><code>Cabinet.exe</code>: a menu lists the games, ready or with their ROM missing. <code>Cabinet.exe --set commando</code> starts a game directly.</p>
       </div>

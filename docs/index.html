@@ -57,7 +57,7 @@
       </div>
       <div class="box cart"><h3>La cartouche</h3><p>quels fichiers ROM, à quelle adresse, pour quelle carte. Générée depuis MAME, chaque fichier contrôlé par son CRC32.</p><code>src/romsets</code></div>
       <ul>
-        <li>Une carte porte le nom de son circuit imprimé (<code>Capcom84100</code>), jamais celui d'un jeu.</li>
+        <li>Une carte porte le nom de son circuit imprimé (exemple : <code>Capcom84100</code>). Si un fichier porte le nom d'un jeu, c'est que vous lisez une partie propre à l'implémentation de ce jeu.</li>
         <li>Ajouter un jeu sur une carte connue : une unité de cartouche.</li>
         <li>Ajouter une carte : une unité de carte, qui réutilise les puces.</li>
         <li>La prise est la même pour toutes les cartes : la borne ne sait rien d'un Z80 ou d'un 68000.</li>
@@ -121,7 +121,7 @@
           </table>
         </div>
         <h3 style="margin-top:24px">2. Compiler</h3>
-        <p>Ouvrir <code>samples/Cabinet/Cabinet.dpr</code> dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le <code>.dpr</code> : rien à configurer. Développé avec Delphi 13.</p>
+        <p>Ouvrir <code>samples/Cabinet/Cabinet.dpr</code> dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le <code>.dpr</code>, il n'y a donc rien d'autre à configurer. Le projet est développé avec Delphi 13.</p>
         <h3>3. Lancer</h3>
         <p><code>Cabinet.exe</code> : un menu affiche les jeux, prêts ou avec leur ROM manquante. <code>Cabinet.exe --set commando</code> lance un jeu directement.</p>
       </div>
