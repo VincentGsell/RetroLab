@@ -73,13 +73,18 @@ MPL-2.0 ([LICENSE](LICENSE)). Third-party code and trademarks: [NOTICE.md](NOTIC
 <details open>
 <summary><b>🇫🇷 Français</b></summary>
 
-Réécrire en Pascal objet moderne les jeux d'arcade des années 80, avec un code que les humains comme les IA peuvent lire et réutiliser.
-
+Buts du projet :
+- Réécrire et *comprendre* l'émulation de borne d'arcade et d'ordinateur
+- écrite cela en Pascal objet moderne : représenté une abstraction des cartes electroniques des jeux et des circuits les cartes des années
+- Les CPU et cartes des années 80 sont reconstruites puce par puce, avec un code que les humains comme les IA peuvent lire et réutiliser.
+- De me permetre de jouer facilement à mes jeux retro préféré "out of the box", avec des manettes modernes et tout conrrectement configuré:)
+- Peut être écrire des jeux hommages à ces titres qui ont construit le monde des jeux vidéo ?
+  
 <p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
 
 ## Jouer
 
-- Six jeux d'arcade : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun de Sega.
+- Jeux d'arcade émulés disponibles : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun de Sega.
 - À la manette Xbox, ou toute manette XInput, branchée même en cours de partie. Le clavier marche aussi.
 - À deux, c'est mieux : 1943 se joue à deux en même temps, en coopération, une manette chacun. 1942, Commando, Gun.Smoke et Ghosts'n Goblins se jouent à deux chacun son tour, comme sur la borne.
 - OutRun : gauche et droite pour tourner, bouton 1 pour accélérer, bouton 2 pour freiner, bouton 3 pour changer de vitesse. La manette vibre quand on sort de la route ; V coupe les vibrations.
