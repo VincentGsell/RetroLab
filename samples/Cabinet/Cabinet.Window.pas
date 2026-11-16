@@ -83,6 +83,7 @@ implementation
 
 const
   CScale = 3;
+  CMenuWidth = 256;   // the game menu is wider than a vertical monitor : 4 columns
   CMaxCatchUp = 4;
   CSampleRate = 44100;
   CMenuRate = 60;
@@ -156,6 +157,8 @@ end;
 procedure TCabinetWindow.ShowMenu;
 begin
   Caption := 'RetroLab';
+  ClientWidth := CMenuWidth * CScale;
+  ClientHeight := 256 * CScale;
   FMenu.Show(ScanCatalog(ExtractFilePath(ParamStr(0))), FLastSet);
   RestartClock;
 end;

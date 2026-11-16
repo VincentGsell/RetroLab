@@ -49,6 +49,8 @@
   "menu": {
     "ready": "PRÊT",
     "norom": "ROM MANQUANTE",
+    "emulated": "ÉMULÉ",
+    "native": "BINAIRE NATIF",
     "play": "%s : Entrée, A ou un clic pour jouer.",
     "howto": "Pour jouer à %s, mettre le set MAME « %s » sous le nom %s.zip dans :",
     "help": "Haut/Bas : choisir   Entrée, A ou clic : jouer   Échap : quitter",

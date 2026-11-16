@@ -13,10 +13,15 @@ uses
   Arcade.RomSet;
 
 type
+  /// How a game runs : its original ROMs on an emulated board, or a program of its own
+  /// (a remake such as Beloved 43, compiled for the PC).
+  TRunMethod = (rmEmulated, rmNative);
+
   TCatalogEntry = record
     Def: TRomSetDef;
     Available: Boolean;
     Problem: string;   // loader message when not available
+    Method: TRunMethod;
   end;
 
 /// Parent sets, oldest first. Each one is loaded once to check it (the files are small).
@@ -38,6 +43,7 @@ begin
         Continue;
       lEntry := Default(TCatalogEntry);
       lEntry.Def := lDef;
+      lEntry.Method := rmEmulated;
       try
         LoadRomSet(lDef.Name, aStartDir).Free;
         lEntry.Available := True;

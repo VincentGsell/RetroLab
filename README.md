@@ -2,16 +2,21 @@
 
 *Classic Games, Retro Gaming Reimagined*
 
+<p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
+
 <details>
 <summary><b>🇬🇧 English</b></summary>
 
-Rewriting 1980s arcade games in modern Object Pascal, as code that both humans and AIs can read and reuse.
-
-<p align="center"><img src="docs/img/menu-en.png" width="560" alt="The RetroLab cabinet menu: six arcade games, ready to play"></p>
+Project goals:
+- Rewrite and *understand* the emulation of the arcade cabinets and home computers of the era.
+- Write it in modern Object Pascal: a faithful abstraction of the game boards and their circuits.
+- Rebuild the CPUs and boards of the 1980s chip by chip, as code that both humans and AIs can read and reuse.
+- Play my favourite retro games easily, out of the box, with modern gamepads and everything set up properly :)
+- Maybe write tribute games to the titles that built the world of video games?
 
 ## Play
 
-- Six arcade games: 1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins by Capcom, OutRun by Sega.
+- Emulated arcade games available: 1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins by Capcom, OutRun by Sega.
 - With an Xbox gamepad, or any XInput gamepad, plugged in even while the game runs. The keyboard works too.
 - Better with two: 1943 is played by two at the same time, in co-op, one gamepad each. 1942, Commando, Gun.Smoke and Ghosts'n Goblins are played by two in turns, as on the cabinet.
 - OutRun: left and right steer, button 1 accelerates, button 2 brakes, button 3 shifts gear. The gamepad vibrates when you leave the road; V switches it off.
@@ -53,9 +58,37 @@ samples/Cabinet   the cabinet: window, sound, controls
 src/cabinet       monitor, speaker, control panel, gamepads
 src/core          the edge connector every board plugs into, ROM loading
 src/boards        one unit per hardware board, named after its PCB number
-src/chips         Z80, AY-3-8910, YM2203, Intel 8751: reusable by any board
+src/chips         processors and sound chips: reusable by any board
 src/romsets       the cartridges: which ROM files, for which board
 ```
+
+### The boards
+
+Each board is a unit (`src/boards/Arcade.Board.<name>.pas`), with its video in `.Video` and sometimes its graphics decoding in `.Gfx`.
+
+| Board | Hardware | Chips on it | Game (cartridge unit) |
+|---|---|---|---|
+| `Capcom84100` | Capcom PCB 84100, 1984 | 2 × Z80, 2 × AY-3-8910 | 1942 (`Arcade.RomSet.Capcom1942`) |
+| `Capcom85605` | Capcom PCB 85605, 1985 | 2 × Z80 (encrypted opcodes), 2 × YM2203 | Commando (`Arcade.RomSet.Commando`) |
+| `Capcom85113` | Capcom PCB 85113, 1985 | 2 × Z80, 2 × YM2203 | Gun.Smoke (`Arcade.RomSet.GunSmoke`) |
+| `Capcom85606` | Capcom PCB 85606, 1985 | MC6809, Z80, 2 × YM2203 | Ghosts'n Goblins (`Arcade.RomSet.GhostsNGoblins`) |
+| `CapcomBM` | Capcom "BM" board, 1987 | 2 × Z80, Intel 8751, 2 × YM2203 | 1943 (`Arcade.RomSet.Midway1943`) |
+| `Sega1715376` | Sega 171-5376 (Out Run), 1986 | 2 × MC68000, Z80, YM2151, Sega PCM | OutRun (`Arcade.RomSet.OutRun`) |
+
+### The chips
+
+Each chip is a unit in `src/chips`, with no dependency: it only knows its own pins (memory, interrupts, sound out).
+
+| Chip | Unit | Role | Boards |
+|---|---|---|---|
+| Zilog Z80 | `Arcade.Chip.Z80` (+ `.Disasm`) | 8-bit CPU, main or sound | all six |
+| Motorola MC6809 | `Arcade.Chip.M6809` | 8-bit CPU | Capcom85606 |
+| Motorola MC68000 | `Arcade.Chip.M68000` | 16/32-bit CPU | Sega1715376 |
+| Intel 8751 (MCS-51) | `Arcade.Chip.MCS51` | protection microcontroller | CapcomBM |
+| General Instrument AY-3-8910 | `Arcade.Chip.AY8910` | 3-voice square wave sound | Capcom84100, and inside the YM2203 |
+| Yamaha YM2203 | `Arcade.Chip.YM2203` | FM sound, 3 voices | Capcom85605, 85113, 85606, BM |
+| Yamaha YM2151 | `Arcade.Chip.YM2151` | FM sound, 8 voices, stereo | Sega1715376 |
+| Sega 315-5218 | `Arcade.Chip.SegaPCM` | 16 sampled voices | Sega1715376 |
 
 - A board is named after its hardware (`Capcom84100`), never after a game.
 - A game only exists as a cartridge in `src/romsets`.
@@ -74,13 +107,11 @@ MPL-2.0 ([LICENSE](LICENSE)). Third-party code and trademarks: [NOTICE.md](NOTIC
 <summary><b>🇫🇷 Français</b></summary>
 
 Buts du projet :
-- Réécrire et *comprendre* l'émulation de borne d'arcade et d'ordinateur
-- écrite cela en Pascal objet moderne : représenté une abstraction des cartes electroniques des jeux et des circuits les cartes des années
-- Les CPU et cartes des années 80 sont reconstruites puce par puce, avec un code que les humains comme les IA peuvent lire et réutiliser.
-- De me permetre de jouer facilement à mes jeux retro préféré "out of the box", avec des manettes modernes et tout conrrectement configuré:)
-- Peut être écrire des jeux hommages à ces titres qui ont construit le monde des jeux vidéo ?
-  
-<p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
+- Réécrire et *comprendre* l'émulation des bornes d'arcade et des ordinateurs de l'époque.
+- L'écrire en Pascal objet moderne : une abstraction fidèle des cartes électroniques des jeux et de leurs circuits.
+- Reconstruire puce par puce les processeurs et les cartes des années 80, avec un code que les humains comme les IA peuvent lire et réutiliser.
+- Jouer facilement à mes jeux rétro préférés, prêts à l'emploi, avec des manettes modernes et tout bien configuré :)
+- Peut-être écrire des jeux hommages à ces titres qui ont construit le monde du jeu vidéo ?
 
 ## Jouer
 
@@ -126,9 +157,37 @@ samples/Cabinet   la borne : fenêtre, son, commandes
 src/cabinet       écran, haut-parleur, panneau de commandes, manettes
 src/core          la prise où se branche chaque carte, chargement des ROM
 src/boards        une unité par carte, nommée d'après son numéro de PCB
-src/chips         Z80, AY-3-8910, YM2203, Intel 8751 : réutilisables par toute carte
+src/chips         processeurs et puces son : réutilisables par toute carte
 src/romsets       les cartouches : quels fichiers ROM, pour quelle carte
 ```
+
+### Les cartes
+
+Chaque carte est une unité (`src/boards/Arcade.Board.<nom>.pas`), avec sa vidéo dans `.Video` et parfois le décodage de ses graphismes dans `.Gfx`.
+
+| Carte | Matériel | Puces soudées dessus | Jeu (unité de cartouche) |
+|---|---|---|---|
+| `Capcom84100` | Capcom PCB 84100, 1984 | 2 × Z80, 2 × AY-3-8910 | 1942 (`Arcade.RomSet.Capcom1942`) |
+| `Capcom85605` | Capcom PCB 85605, 1985 | 2 × Z80 (opcodes chiffrés), 2 × YM2203 | Commando (`Arcade.RomSet.Commando`) |
+| `Capcom85113` | Capcom PCB 85113, 1985 | 2 × Z80, 2 × YM2203 | Gun.Smoke (`Arcade.RomSet.GunSmoke`) |
+| `Capcom85606` | Capcom PCB 85606, 1985 | MC6809, Z80, 2 × YM2203 | Ghosts'n Goblins (`Arcade.RomSet.GhostsNGoblins`) |
+| `CapcomBM` | carte Capcom « BM », 1987 | 2 × Z80, Intel 8751, 2 × YM2203 | 1943 (`Arcade.RomSet.Midway1943`) |
+| `Sega1715376` | Sega 171-5376 (Out Run), 1986 | 2 × MC68000, Z80, YM2151, PCM Sega | OutRun (`Arcade.RomSet.OutRun`) |
+
+### Les puces
+
+Chaque puce est une unité de `src/chips`, sans dépendance : elle ne connaît que ses propres broches (mémoire, interruptions, sortie son).
+
+| Puce | Unité | Rôle | Cartes |
+|---|---|---|---|
+| Zilog Z80 | `Arcade.Chip.Z80` (+ `.Disasm`) | processeur 8 bits, principal ou son | les six |
+| Motorola MC6809 | `Arcade.Chip.M6809` | processeur 8 bits | Capcom85606 |
+| Motorola MC68000 | `Arcade.Chip.M68000` | processeur 16/32 bits | Sega1715376 |
+| Intel 8751 (MCS-51) | `Arcade.Chip.MCS51` | microcontrôleur de protection | CapcomBM |
+| General Instrument AY-3-8910 | `Arcade.Chip.AY8910` | son, 3 voix carrées | Capcom84100, et dans le YM2203 |
+| Yamaha YM2203 | `Arcade.Chip.YM2203` | son FM, 3 voix | Capcom85605, 85113, 85606, BM |
+| Yamaha YM2151 | `Arcade.Chip.YM2151` | son FM, 8 voix, stéréo | Sega1715376 |
+| Sega 315-5218 | `Arcade.Chip.SegaPCM` | 16 voix échantillonnées | Sega1715376 |
 
 - Une carte porte le nom de son matériel (`Capcom84100`), jamais celui d'un jeu.
 - Un jeu n'existe que sous forme de cartouche, dans `src/romsets`.

@@ -188,7 +188,7 @@ procedure TCabinetMenu.Refresh;
 var
   i: Integer;
   lEntry: TCatalogEntry;
-  lStatus: string;
+  lStatus, lMethod: string;
 begin
   for i := 0 to High(FEntries) do
   begin
@@ -197,8 +197,12 @@ begin
       lStatus := Tr('menu.ready', 'READY')
     else
       lStatus := Tr('menu.norom', 'ROM MISSING');
-    FRowTexts[i].Text := Format('%-36s %-13s %s', [lEntry.Def.Title, lEntry.Def.Maker + ' ' + lEntry.Def.Year,
-      lStatus]);
+    if lEntry.Method = rmNative then
+      lMethod := Tr('menu.native', 'NATIVE BINARY')
+    else
+      lMethod := Tr('menu.emulated', 'EMULATED');
+    FRowTexts[i].Text := Format('%-34s %-12s %-14s %s', [lEntry.Def.Title, lEntry.Def.Maker + ' ' + lEntry.Def.Year,
+      lStatus, lMethod]);
     if lEntry.Available then
       FRowTexts[i].TextSettings.FontColor := CReady
     else
