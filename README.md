@@ -2,10 +2,11 @@
 
 *Classic Games, Retro Gaming Reimagined*
 
-<p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
-
 <details>
 <summary><b>🇬🇧 English</b></summary>
+
+<p align="center"><img src="docs/img/menu-en.png" width="560" alt="The RetroLab cabinet menu: six arcade games, ready to play"></p>
+<p align="center"><a href="https://vincentgsell.github.io/RetroLab/en.html"><b>RetroLab</b>: the project site</a></p>
 
 Project goals:
 - Rewrite and *understand* the emulation of the arcade cabinets and home computers of the era.
@@ -105,6 +106,9 @@ MPL-2.0 ([LICENSE](LICENSE)). Third-party code and trademarks: [NOTICE.md](NOTIC
 
 <details open>
 <summary><b>🇫🇷 Français</b></summary>
+
+<p align="center"><img src="docs/img/menu-fr.png" width="560" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer"></p>
+<p align="center"><a href="https://vincentgsell.github.io/RetroLab/"><b>RetroLab</b> : le site du projet</a></p>
 
 Buts du projet :
 - Réécrire et *comprendre* l'émulation des bornes d'arcade et des ordinateurs de l'époque.
