@@ -33,7 +33,7 @@
 
     <section>
       <h2>Les jeux</h2>
-      <img class="shot" src="img/menu-fr.png" alt="Le menu de la borne RetroLab : six jeux d'arcade, prêts à jouer">
+      <img class="shot" src="img/menu-fr.png" alt="Le menu de la borne RetroLab : sept jeux d'arcade, prêts à jouer">
       <div class="games">
         <button type="button" class="panel game" data-board="capcom84100"><h3>1942</h3><p>Capcom, 1984</p><p class="board">carte Capcom84100</p></button>
         <button type="button" class="panel game" data-board="capcom85605"><h3>Commando</h3><p>Capcom, 1985</p><p class="board">carte Capcom85605</p></button>
@@ -41,6 +41,7 @@
         <button type="button" class="panel game" data-board="capcom85606"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="board">carte Capcom85606</p></button>
         <button type="button" class="panel game" data-board="sega1715376"><h3>OutRun</h3><p>Sega, 1986</p><p class="board">carte Sega1715376</p></button>
         <button type="button" class="panel game" data-board="capcombm"><h3>1943</h3><p>Capcom, 1987</p><p class="board">carte CapcomBM</p></button>
+        <button type="button" class="panel game" data-board="sega1715609"><h3>Power Drift</h3><p>Sega, 1988</p><p class="board">carte Sega1715609</p></button>
       </div>
       <p class="note">Manette Xbox ou toute manette XInput, ou clavier ; commandes reconfigurables avec F1. Un clic sur un jeu ouvre sa carte dans l'architecture.</p>
     </section>
@@ -120,18 +121,29 @@
             <tr><td>1943</td><td><code>roms/1943.zip</code></td><td>1943: The Battle of Midway (Euro)</td></tr>
             <tr><td>Ghosts'n Goblins</td><td><code>roms/gng.zip</code></td><td>Ghosts'n Goblins (World? set 1)</td></tr>
             <tr><td>OutRun</td><td><code>roms/outrun.zip</code></td><td>Out Run (sitdown/upright, Rev B)</td></tr>
+            <tr><td>Power Drift</td><td><code>roms/pdrift.zip</code></td><td>Power Drift (World, Rev A)</td></tr>
           </table>
         </div>
         <h3 style="margin-top:24px">2. Compiler</h3>
         <p>Ouvrir <code>samples/Cabinet/Cabinet.dpr</code> dans Delphi et compiler en Win64. Toutes les unités sont déclarées dans le <code>.dpr</code>, il n'y a donc rien d'autre à configurer. Le projet est développé avec Delphi 13.</p>
         <h3>3. Lancer</h3>
         <p><code>Cabinet.exe</code> : un menu affiche les jeux, prêts ou avec leur ROM manquante. <code>Cabinet.exe --set commando</code> lance un jeu directement.</p>
+        <h3>4. Régler la borne</h3>
+        <p>Les interrupteurs DIP des cartes (difficulté, vies, prix d'une partie) se règlent en ligne de commande, avec une valeur hexadécimale par banque : <code>--dip0 XX</code> et <code>--dip1 XX</code>. L'option <code>--service</code> démarre la carte dans son mode de test.</p>
+        <div class="scroll">
+          <table>
+            <tr><th>Jeu</th><th>Par défaut</th><th>Facile</th><th>Difficile</th><th>Très difficile</th></tr>
+            <tr><td>Power Drift</td><td><code>EA</code></td><td><code>--dip0 AA</code></td><td><code>--dip0 6A</code></td><td><code>--dip0 2A</code></td></tr>
+            <tr><td>OutRun, circulation</td><td><code>F9</code></td><td><code>--dip0 B9</code></td><td><code>--dip0 79</code></td><td><code>--dip0 39</code></td></tr>
+          </table>
+        </div>
+        <p>Dans OutRun, <code>--dip0 A9</code> donne à la fois un temps facile et une circulation légère. Pour Power Drift, <code>--dip0 EB</code> transforme la borne en cabine mobile : le jeu pilote le siège, et son inclinaison passe dans les vibrations de la manette.</p>
       </div>
     </section>
 
     <footer>
       <p>RetroLab, par Vincent Gsell. Licence MPL-2.0. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
-      <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun est une marque de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux. Le dépôt ne contient ni ROM ni code de leurs jeux ; les captures d'OutRun montrent l'émulateur faisant tourner les ROM d'origine.</p>
+      <p>1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins sont des marques de Capcom Co., Ltd. OutRun et Power Drift sont des marques de Sega Corporation. Ce projet n'est ni affilié à Capcom ou Sega, ni approuvé par eux. Le dépôt ne contient ni ROM ni code de leurs jeux ; les captures d'OutRun montrent l'émulateur faisant tourner les ROM d'origine.</p>
     </footer>
   </main>
   <script src="theme.js"></script>

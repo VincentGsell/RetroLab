@@ -2,7 +2,7 @@
 
     python -I mame2romset.py <driver.cpp> <board family> <unit name> [--skip-region=<name>] <set> [<set> ...]
 
-Reads ROM_START( set ) ... ROM_END blocks (ROM_REGION, ROM_LOAD, ROM_LOAD16_BYTE, ROM_LOAD32_BYTE, ROM_RELOAD) and the GAME( ... ) / GAMEL( ... ) lines
+Reads ROM_START( set ) ... ROM_END blocks (ROM_REGION, ROM_LOAD, ROM_LOAD16/32/64_BYTE, ROM_RELOAD) and the GAME( ... ) / GAMEL( ... ) lines
 (year, parent, maker, title), and writes the Pascal unit to stdout. --skip-region drops a region the
 emulation doesn't use (PAL dumps 'plds' are often missing from sets : requiring them would refuse a good set). Copying CRCs by hand is how
 cartridges end up silently wrong ; generating them keeps the unit identical to the MAME reference.
@@ -62,7 +62,7 @@ for s in wanted:
     last = None
     for line in body.splitlines():
         line = line.strip()
-        m = re.match(r'ROM_REGION(?:16|32)?(?:_LE|_BE)?\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*"(\w+)"\s*,\s*([^)]*)\)', line)
+        m = re.match(r'ROM_REGION(?:16|32|64)?(?:_LE|_BE)?\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*"(\w+)"\s*,\s*([^)]*)\)', line)
         if m:
             size, region, flags = int(m.group(1), 0), m.group(2), m.group(3)
             fill = '$FF' if 'ERASEFF' in flags else '0'
@@ -70,9 +70,9 @@ for s in wanted:
                 continue
             out.append("  lSet.AddRegion('%s', $%X, %s);" % (region, size, fill))
             continue
-        m = re.match(r'ROM_LOAD(|16_BYTE|32_BYTE)\(\s*"([^"]+)"\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(?:BAD_DUMP\s*)?CRC\(([0-9a-fA-F]{8})\)', line)
+        m = re.match(r'ROM_LOAD(|16_BYTE|32_BYTE|64_BYTE)\(\s*"([^"]+)"\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(?:BAD_DUMP\s*)?CRC\(([0-9a-fA-F]{8})\)', line)
         if m:
-            step = {'': 1, '16_BYTE': 2, '32_BYTE': 4}[m.group(1)]
+            step = {'': 1, '16_BYTE': 2, '32_BYTE': 4, '64_BYTE': 8}[m.group(1)]
             name, ofs, size, crc = m.group(2), int(m.group(3), 0), int(m.group(4), 0), m.group(5).upper()
             if region in skip:
                 continue

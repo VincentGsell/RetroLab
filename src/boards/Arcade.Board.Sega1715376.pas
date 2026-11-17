@@ -164,6 +164,7 @@ type
 implementation
 
 uses
+  Arcade.Board.SegaPalette,
   Arcade.Board.Sega1715376.Video;
 
 const
@@ -238,35 +239,6 @@ begin
     end;
   end;
   FillChar(Result[256 * 2 * 512], 512, 3);
-end;
-
-{ palette (MAME sega_16bit_common_base::palette_init : resistor weights, 470 ohm shadow / hilight) }
-
-var
-  GPalNormal, GPalShadow, GPalHilight: array[0..31] of Byte;
-
-procedure InitPaletteTables;
-const
-  CG: array[0..4] of Double = (1 / 3900, 1 / 2000, 1 / 1000, 1 / 500, 1 / 250);
-  CG6 = 1 / 470;
-var
-  v, b: Integer;
-  lSum5, lSum6, lAcc: Double;
-begin
-  lSum5 := 0;
-  for b := 0 to 4 do
-    lSum5 := lSum5 + CG[b];
-  lSum6 := lSum5 + CG6;
-  for v := 0 to 31 do
-  begin
-    lAcc := 0;
-    for b := 0 to 4 do
-      if (v and (1 shl b)) <> 0 then
-        lAcc := lAcc + CG[b];
-    GPalNormal[v] := Round(255 * lAcc / lSum5);
-    GPalShadow[v] := Round(255 * lAcc / lSum6);
-    GPalHilight[v] := Round(255 * (lAcc + CG6) / lSum6);
-  end;
 end;
 
 { TBoardSega1715376 }
@@ -570,19 +542,9 @@ end;
 procedure TBoardSega1715376.PaletteWrite(aOffset: Cardinal);
 var
   lIndex: Integer;
-  lValue: Word;
-  r, g, b: Integer;
 begin
   lIndex := (aOffset shr 1) and (C5376_PALETTE - 1);
-  lValue := Rd16(PaletteRam, lIndex * 2);
-  r := ((lValue shr 12) and 1) or ((lValue shl 1) and $1E);
-  g := ((lValue shr 13) and 1) or ((lValue shr 3) and $1E);
-  b := ((lValue shr 14) and 1) or ((lValue shr 7) and $1E);
-  Palette[lIndex] := $FF000000 or (TArgb(GPalNormal[r]) shl 16) or (TArgb(GPalNormal[g]) shl 8) or GPalNormal[b];
-  if (lValue and $8000) <> 0 then
-    Palette[C5376_PALETTE + lIndex] := $FF000000 or (TArgb(GPalHilight[r]) shl 16) or (TArgb(GPalHilight[g]) shl 8) or GPalHilight[b]
-  else
-    Palette[C5376_PALETTE + lIndex] := $FF000000 or (TArgb(GPalShadow[r]) shl 16) or (TArgb(GPalShadow[g]) shl 8) or GPalShadow[b];
+  SegaColor(Rd16(PaletteRam, lIndex * 2), Palette[lIndex], Palette[C5376_PALETTE + lIndex]);
 end;
 
 { I/O : 8255, inputs, ADC, sprite trigger }
@@ -1146,7 +1108,6 @@ begin
 end;
 
 initialization
-  InitPaletteTables;
   RegisterBoard(TBoardSega1715376);
 
 end.

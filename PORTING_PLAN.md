@@ -4,17 +4,17 @@
 
 ## Ce qui est fait
 
-- La borne émulée fait tourner six jeux : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun de Sega.
+- La borne émulée fait tourner sept jeux : 1942, Commando, Gun.Smoke, 1943 et Ghosts'n Goblins de Capcom, OutRun et Power Drift de Sega.
 - Les processeurs Z80, MC6809 et MC68000 sont écrits, et chacun a son banc de test. Les puces son AY-3-8910, YM2203, YM2151 et la puce PCM de Sega sont écrites elles aussi.
 - On joue au clavier ou à la manette, et les commandes se configurent depuis la borne.
-- Dans OutRun, la manette vibre quand le volant de la borne d'origine vibrait.
+- Dans OutRun et Power Drift, la manette vibre quand le volant de la borne d'origine vibrait.
 
 ## L'ordre de travail
 
 1. RetroLab Room, la salle d'arcade en 3D. Elle n'utilise que les cartes existantes, et c'est elle qui pose les briques FMeX dont les remakes auront besoin : jusqu'à quatre manettes, le son, une boucle à 60 Hz et un rendu d'écran cathodique.
 2. Beloved 43, le plus simple des remakes, qui reprend ces briques.
 3. L'hommage à Ghosts'n Goblins. Avec la plateforme, quatre joueurs et la caméra, c'est le plus exigeant, et il profitera de tout ce que Beloved 43 aura mis en place.
-4. De nouvelles cartes pour la borne, qui s'intercalent au fil de la liste des jeux à couvrir. Power Drift est la prochaine.
+4. De nouvelles cartes pour la borne, qui s'intercalent au fil de la liste des jeux à couvrir.
 5. Le Commodore 64.
 
 ## RetroLab Room, la salle d'arcade en 3D
@@ -37,7 +37,7 @@ Ces jeux sont des programmes natifs, qui n'ont besoin d'aucune ROM. Ils rendent 
 - On y joue à deux en coopération.
 - La borne émulée sert de référence pour retrouver les sensations du jeu : la vitesse, le rythme des vagues et la difficulté.
 
-### L'hommage à Ghosts'n Goblins (nom à trouver)
+### Chevalier, l'hommage à Ghosts'n Goblins (nom pressenti)
 
 - C'est un jeu de plateforme et de tir dans l'esprit de Ghosts'n Goblins : un chevalier qui perd son armure au premier coup, des armes à lancer, des cimetières et des démons.
 - Tout est redessiné et les niveaux sont neufs. Certains rappellent ceux d'origine, pour que le lien avec le jeu soit évident.
@@ -48,17 +48,22 @@ Ces jeux sont des programmes natifs, qui n'ont besoin d'aucune ROM. Ils rendent 
 
 ### Power Drift en 3D
 
-- Une fois la carte de Power Drift émulée, le jeu aura aussi sa version FMeX, avec de vrais circuits en 3D.
+- La carte de Power Drift est émulée. Le jeu aura aussi sa version FMeX, avec de vrais circuits en 3D.
+
+## Raconter le fonctionnement
+
+- Une présentation détaillée et animée du fonctionnement de l'émulateur : comment une carte est reconstruite, comment ses processeurs avancent ligne d'écran par ligne d'écran, et comment l'image se compose plan par plan.
+- Pour chaque remake FMeX, une description détaillée de son fonctionnement, dans l'esprit des livres de Fabien Sanglard sur les moteurs de Wolfenstein 3D et de Doom.
+- Ces descriptions pourront prendre la forme d'un livre au format ePub, lisible directement dans le jeu grâce à FMeX.book.
 
 ## Les nouvelles cartes pour la borne
 
 | Jeu | Matériel | Ce qu'il reste à écrire | Effort |
 |---|---|---|---|
-| Power Drift (Sega, 1988) | Y Board : 3 × 68000, Z80, YM2151, PCM Sega | les puces de calcul et d'entrées-sorties de Sega, le plan de sprites tourné et incliné ligne par ligne, un second jeu de sprites System 16B | gros, à cause de la rotation |
 | Ghouls'n Ghosts (Capcom, 1988) | CPS-1 : 68000, Z80, YM2151, OKI MSM6295 | la puce MSM6295 et la vidéo CPS-1 (trois plans, sprites, priorités) | moyen, et il ouvre une grande partie de la ludothèque Capcom |
 
-- Le 68000 et le YM2151 ont été écrits pour OutRun, et ces deux cartes les réutilisent.
-- Pour l'instant, OutRun se joue avec les boutons : gauche et droite tournent le volant progressivement, les boutons 1 et 2 servent d'accélérateur et de frein, et le bouton 3 change de vitesse. Le stick et les gâchettes analogiques de la manette arriveront avec Power Drift, qui se joue lui aussi au volant.
+- Le 68000 et le YM2151 ont été écrits pour OutRun, et la carte CPS-1 les réutilisera.
+- Pour l'instant, OutRun et Power Drift se jouent avec les boutons : gauche et droite tournent le volant progressivement, les boutons 1 et 2 servent d'accélérateur et de frein, et le bouton 3 change de vitesse. Le stick et les gâchettes analogiques de la manette sont la prochaine étape pour ces deux jeux.
 
 ## Le Commodore 64
 
@@ -66,4 +71,5 @@ Ces jeux sont des programmes natifs, qui n'ont besoin d'aucune ROM. Ils rendent 
 - On veut aussi mettre en avant les jeux C64 récents, écrits et diffusés librement par des amateurs.
 - Il faudra écrire le processeur 6510 (une variante du 6502) avec son banc de test, la vidéo VIC-II, le son SID et le CIA 6526, qui gère les minuteries, le joystick et le clavier.
 - Les jeux se chargeront depuis des fichiers `.prg` et des cartouches `.crt`. Le lecteur de disquette 1541 viendra plus tard, si le besoin s'en fait sentir.
-- Comme pour les jeux d'arcade, l'utilisateur fournit lui-même les ROM système du C64 (KERNAL, BASIC et jeu de caractères).
+- Les ROM système d'origine du C64 (KERNAL, BASIC et jeu de caractères) sont sous licence commerciale de Cloanto. Celui qui les possède peut les fournir, comme pour les jeux d'arcade.
+- Pour qu'on puisse jouer dès la compilation, sans rien fournir, on s'appuiera sur les Open ROMs du projet MEGA65, une réécriture libre (GPL-3.0) de ces ROM, et sur des jeux amateurs dont les auteurs autorisent la diffusion.

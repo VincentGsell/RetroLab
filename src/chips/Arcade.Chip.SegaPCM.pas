@@ -4,7 +4,7 @@ unit Arcade.Chip.SegaPCM;
 ///  Behaviour follows MAME segapcm.cpp (BSD-3) :
 ///    registers, voice v at v * 8 : +2 left volume, +3 right volume, +4/+5 loop address (bits 8-23),
 ///    +6 end page, +7 address step ; $84/$85 current address (bits 8-23), $86 control
-///    (b0 voice off, b1 no loop, b4-b6 ROM bank)
+///    (b0 voice off, b1 no loop, upper bits ROM bank)
 ///    output rate = clock / 128 (16 voices x 8 cycles)
 ///  Pure unit, FPC compatible.
 
@@ -44,8 +44,9 @@ type
   public
     /// Board mixing gain (MAME add_route). Default 1.
     Gain: Single;
-    /// aRom : the PCM region ; aBankShift : 12 for 512 KB boards (BANK_512).
-    constructor Create(aClock: Double; const aRom: TBytes; aBankShift: Integer = 12);
+    /// aRom : the PCM region ; banking as MAME set_bank : 512 KB boards (BANK_512) shift 12, mask $70 ;
+    /// 2 MB boards (BANK_12M | BANK_MASKF8) shift 13, mask $F8.
+    constructor Create(aClock: Double; const aRom: TBytes; aBankShift: Integer = 12; aBankMask: Byte = $70);
     procedure Reset;
     function Read(aOffset: Byte): Byte;
     procedure Write(aOffset: Byte; aValue: Byte);
@@ -55,7 +56,7 @@ type
 
 implementation
 
-constructor TSegaPCM.Create(aClock: Double; const aRom: TBytes; aBankShift: Integer);
+constructor TSegaPCM.Create(aClock: Double; const aRom: TBytes; aBankShift: Integer; aBankMask: Byte);
 var
   lSize: Cardinal;
 begin
@@ -67,7 +68,7 @@ begin
     lSize := lSize shl 1;
   FRomMask := lSize - 1;
   FBankShift := aBankShift;
-  FBankMask := $70;
+  FBankMask := aBankMask;
   Gain := 1;
   Reset;
 end;

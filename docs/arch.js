@@ -53,12 +53,22 @@
       kind: { fr: 'son FM stéréo', en: 'stereo FM sound' },
       role: { fr: '8 voix FM stéréo, LFO à 4 formes d\'onde, bruit, 2 timers, convertisseur YM3012 avec sa troncature en virgule flottante. Table de hauteur des notes relevée sur la puce (David Viens), via ymfm.',
               en: '8 stereo FM voices, LFO with 4 waveforms, noise, 2 timers, YM3012 converter with its floating-point truncation. Note pitch table measured on the chip (David Viens), via ymfm.' },
-      check: { fr: 'Les musiques d\'OutRun.', en: 'The OutRun music.' } },
+      check: { fr: 'Les musiques d\'OutRun et de Power Drift.', en: 'The music of OutRun and Power Drift.' } },
+    { id: 'segamath', name: 'Sega 315-5248 / 315-5249', unit: 'Arcade.Chip.SegaMath',
+      kind: { fr: 'calcul câblé', en: 'hardware arithmetic' },
+      role: { fr: 'Le multiplicateur rend le produit signé de deux nombres de 16 bits. Le diviseur divise un nombre de 32 bits par un nombre de 16 bits, en signé avec quotient borné et reste, ou en non signé avec un quotient de 32 bits, et signale la division par zéro et le débordement.',
+              en: 'The multiplier returns the signed product of two 16-bit numbers. The divider divides a 32-bit number by a 16-bit one, signed with a clamped quotient and a remainder, or unsigned with a 32-bit quotient, and flags division by zero and overflow.' },
+      check: { fr: 'En jeu : chaque 68000 de Power Drift a sa paire, et toute la 3D du jeu passe par elles.', en: 'In game: each Power Drift 68000 has its pair, and all the game\'s 3D goes through them.' } },
+    { id: 'sega5296', name: 'Sega 315-5296', unit: 'Arcade.Chip.Sega315_5296',
+      kind: { fr: 'entrées-sorties', en: 'I/O' },
+      role: { fr: '8 ports, chacun en entrée ou en sortie : boutons, monnayeur, DIP, moteurs, et le reset des processeurs secondaires. Il répond aussi « SEGA » sur 4 registres, que le jeu vérifie.',
+              en: '8 ports, each one an input or an output: buttons, coin slots, DIP switches, motors, and the reset of the secondary CPUs. It also answers "SEGA" on 4 registers, which the game checks.' },
+      check: { fr: 'En jeu : Power Drift démarre, lit ses commandes et pilote ses sorties.', en: 'In game: Power Drift boots, reads its controls and drives its outputs.' } },
     { id: 'segapcm', name: 'Sega 315-5218', unit: 'Arcade.Chip.SegaPCM',
       kind: { fr: 'son échantillonné', en: 'sampled sound' },
       role: { fr: '16 voix d\'échantillons 8 bits lus en ROM, volume gauche et droite, boucles, banques de ROM.',
               en: '16 voices of 8-bit samples read from ROM, left and right volume, loops, ROM banks.' },
-      check: { fr: 'Les voix et bruitages d\'OutRun.', en: 'The OutRun voices and sound effects.' } }
+      check: { fr: 'Les voix et bruitages d\'OutRun et de Power Drift.', en: 'The voices and sound effects of OutRun and Power Drift.' } }
   ];
 
   var boards = [
@@ -103,7 +113,14 @@
       clocks: { fr: 'Z80 principal 6 MHz, Z80 son 3 MHz, Intel 8751 à 3 MHz, 2 × YM2203 à 1,5 MHz.', en: 'Main Z80 6 MHz, sound Z80 3 MHz, Intel 8751 at 3 MHz, 2 × YM2203 at 1.5 MHz.' },
       video: { fr: 'Deux décors lus en ROM, 128 sprites avec priorité pixel par pixel sur le décor de devant, texte ; chaque plan s\'allume ou s\'éteint.', en: 'Two backgrounds read from ROM, 128 sprites with per-pixel priority against the front background, text layer; each layer can be switched off.' },
       more: { fr: 'Le 8751 est le microcontrôleur de protection : il échange des octets avec le processeur principal et le processeur son, et lit la ligne d\'écran en cours.', en: 'The 8751 is the protection microcontroller: it swaps bytes with the main and sound CPUs, and reads the current scanline.' },
-      units: 'Arcade.Board.CapcomBM, .Video, .Gfx', cart: 'Arcade.RomSet.Midway1943', ref: 'capcom/1943.cpp' }
+      units: 'Arcade.Board.CapcomBM, .Video, .Gfx', cart: 'Arcade.RomSet.Midway1943', ref: 'capcom/1943.cpp' },
+    { id: 'sega1715609', name: 'Sega1715609', game: 'Power Drift', year: 1988,
+      hw: { fr: 'Sega Y Board : carte du dessus 171-5609 et carte du dessous 171-5610. Écran horizontal 320 × 224 à 60 Hz.', en: 'Sega Y Board: top board 171-5609 and bottom board 171-5610. Horizontal 320 × 224 screen at 60 Hz.' },
+      chips: [['m68000', 3], ['z80', 1], ['ym2151', 1], ['segapcm', 1], ['segamath', 3], ['sega5296', 1]],
+      clocks: { fr: '3 × MC68000 à 12,5 MHz (le jeu, les sprites tournés, la rotation et l\'affichage), Z80 son, YM2151 et PCM à 4 MHz.', en: '3 × MC68000 at 12.5 MHz (the game, the rotated sprites, rotation and display), sound Z80, YM2151 and PCM at 4 MHz.' },
+      video: { fr: 'Les sprites Y Board sont dessinés dans une image de 512 × 512, que la puce de rotation lit à travers une transformation affine : toute la scène tourne et s\'incline. Un second jeu de sprites System 16B passe par-dessus, avec priorité et ombre. Palette de 8192 couleurs.', en: 'The Y Board sprites are drawn into a 512 × 512 picture, which the rotation chip reads through an affine transform: the whole scene turns and tilts. A second System 16B sprite set goes on top, with priority and shadow. 8192-colour palette.' },
+      more: { fr: 'Le Z80 son reçoit une NMI à chaque commande et l\'IRQ du YM2151. Volant et pédales passent par un convertisseur MSM6253 qui rend son résultat bit par bit.', en: 'The sound Z80 gets an NMI on each command and the YM2151 IRQ. Wheel and pedals go through an MSM6253 converter that returns its result bit by bit.' },
+      units: 'Arcade.Board.Sega1715609, .Video, Arcade.Board.SegaPalette', cart: 'Arcade.RomSet.PowerDrift', ref: 'sega/segaybd.cpp' }
   ];
 
   var root = document.getElementById('explorer');

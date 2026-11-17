@@ -70,6 +70,9 @@ type
     FmGain: Single;
     /// CT1 / CT2 output pins (register $1B bits 6-7) : some boards use them as bank lines.
     OnPortWrite: TYM2151PortWrite;
+    /// True : the timers only advance through AdvanceTimers, so the /IRQ pin keeps the same timing
+    /// whether or not the sound is rendered (boards that wire the YM2151 IRQ to their sound CPU).
+    ExternalTimers: Boolean;
     constructor Create(aClock: Double);
     procedure Reset;
     /// Port 0 = address, port 1 = data (A0 line).
@@ -83,6 +86,8 @@ type
     procedure Render(var aBuffer: array of Single; aOffset, aCount: Integer; aSampleRate: Integer);
     /// True while a timer flag is raised with its IRQ enabled (the chip's /IRQ pin).
     function IrqActive: Boolean;
+    /// Clocks the timers by aFmSamples FM samples (see ExternalTimers).
+    procedure AdvanceTimers(aFmSamples: Integer);
     function Register(aIndex: Byte): Byte;
     property FmRate: Double read GetFmRate;
   end;
@@ -574,6 +579,14 @@ begin
   end;
 end;
 
+procedure TYM2151.AdvanceTimers(aFmSamples: Integer);
+var
+  i: Integer;
+begin
+  for i := 1 to aFmSamples do
+    ClockTimers;
+end;
+
 procedure TYM2151.ClockNoiseAndLfo;
 var
   lRep: Integer;
@@ -636,7 +649,8 @@ var
   lCh: ^TOpmChannel;
   lClockEnv: Boolean;
 begin
-  ClockTimers;
+  if not ExternalTimers then
+    ClockTimers;
   Inc(FEnvCounter);
   if (FEnvCounter and 3) = 3 then
     Inc(FEnvCounter);

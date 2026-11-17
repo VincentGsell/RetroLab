@@ -33,7 +33,7 @@
 
     <section>
       <h2>The games</h2>
-      <img class="shot" src="img/menu-en.png" alt="The RetroLab cabinet menu: six arcade games, ready to play">
+      <img class="shot" src="img/menu-en.png" alt="The RetroLab cabinet menu: seven arcade games, ready to play">
       <div class="games">
         <button type="button" class="panel game" data-board="capcom84100"><h3>1942</h3><p>Capcom, 1984</p><p class="board">Capcom84100 board</p></button>
         <button type="button" class="panel game" data-board="capcom85605"><h3>Commando</h3><p>Capcom, 1985</p><p class="board">Capcom85605 board</p></button>
@@ -41,6 +41,7 @@
         <button type="button" class="panel game" data-board="capcom85606"><h3>Ghosts'n Goblins</h3><p>Capcom, 1985</p><p class="board">Capcom85606 board</p></button>
         <button type="button" class="panel game" data-board="sega1715376"><h3>OutRun</h3><p>Sega, 1986</p><p class="board">Sega1715376 board</p></button>
         <button type="button" class="panel game" data-board="capcombm"><h3>1943</h3><p>Capcom, 1987</p><p class="board">CapcomBM board</p></button>
+        <button type="button" class="panel game" data-board="sega1715609"><h3>Power Drift</h3><p>Sega, 1988</p><p class="board">Sega1715609 board</p></button>
       </div>
       <p class="note">Xbox gamepad or any XInput gamepad, or the keyboard; controls can be rewired with F1. Click a game to open its board in the architecture.</p>
     </section>
@@ -120,18 +121,29 @@
             <tr><td>1943</td><td><code>roms/1943.zip</code></td><td>1943: The Battle of Midway (Euro)</td></tr>
             <tr><td>Ghosts'n Goblins</td><td><code>roms/gng.zip</code></td><td>Ghosts'n Goblins (World? set 1)</td></tr>
             <tr><td>OutRun</td><td><code>roms/outrun.zip</code></td><td>Out Run (sitdown/upright, Rev B)</td></tr>
+            <tr><td>Power Drift</td><td><code>roms/pdrift.zip</code></td><td>Power Drift (World, Rev A)</td></tr>
           </table>
         </div>
         <h3 style="margin-top:24px">2. Build</h3>
         <p>Open <code>samples/Cabinet/Cabinet.dpr</code> in Delphi and compile for Win64. Every unit is listed in the <code>.dpr</code>, so there is nothing else to configure. The project is developed with Delphi 13.</p>
         <h3>3. Run</h3>
         <p><code>Cabinet.exe</code>: a menu lists the games, ready or with their ROM missing. <code>Cabinet.exe --set commando</code> starts a game directly.</p>
+        <h3>4. Cabinet settings</h3>
+        <p>The boards' DIP switches (difficulty, lives, coinage) are set from the command line, as a hexadecimal value per bank: <code>--dip0 XX</code> and <code>--dip1 XX</code>. The <code>--service</code> option starts the board in its test mode.</p>
+        <div class="scroll">
+          <table>
+            <tr><th>Game</th><th>Default</th><th>Easy</th><th>Hard</th><th>Hardest</th></tr>
+            <tr><td>Power Drift</td><td><code>EA</code></td><td><code>--dip0 AA</code></td><td><code>--dip0 6A</code></td><td><code>--dip0 2A</code></td></tr>
+            <tr><td>OutRun, traffic</td><td><code>F9</code></td><td><code>--dip0 B9</code></td><td><code>--dip0 79</code></td><td><code>--dip0 39</code></td></tr>
+          </table>
+        </div>
+        <p>In OutRun, <code>--dip0 A9</code> gives both an easy time limit and light traffic. For Power Drift, <code>--dip0 EB</code> turns the cabinet into the moving model: the game drives the seat, and its roll comes through the gamepad vibrations.</p>
       </div>
     </section>
 
     <footer>
       <p>RetroLab, by Vincent Gsell. MPL-2.0 license. <a href="https://github.com/VincentGsell/RetroLab">github.com/VincentGsell/RetroLab</a></p>
-      <p>1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins are trademarks of Capcom Co., Ltd. OutRun is a trademark of Sega Corporation. This project is not affiliated with or endorsed by Capcom or Sega. The repository contains no ROM and no code from their games; the OutRun screenshots show the emulator running the original ROMs.</p>
+      <p>1942, Commando, Gun.Smoke, 1943 and Ghosts'n Goblins are trademarks of Capcom Co., Ltd. OutRun and Power Drift are trademarks of Sega Corporation. This project is not affiliated with or endorsed by Capcom or Sega. The repository contains no ROM and no code from their games; the OutRun screenshots show the emulator running the original ROMs.</p>
     </footer>
   </main>
   <script src="theme.js"></script>

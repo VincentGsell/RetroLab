@@ -57,6 +57,9 @@ uses
 
   Arcade.Board.Sega1715376 in '..\..\src\boards\Arcade.Board.Sega1715376.pas',
   Arcade.Board.Sega1715376.Video in '..\..\src\boards\Arcade.Board.Sega1715376.Video.pas',
+  Arcade.Board.Sega1715609 in '..\..\src\boards\Arcade.Board.Sega1715609.pas',
+  Arcade.Board.Sega1715609.Video in '..\..\src\boards\Arcade.Board.Sega1715609.Video.pas',
+  Arcade.Board.SegaPalette in '..\..\src\boards\Arcade.Board.SegaPalette.pas',
 
   // ---- LES PUCES (chips) - soldered on the boards above ----------------------------------------
   Arcade.Chip.Z80 in '..\..\src\chips\Arcade.Chip.Z80.pas',
@@ -67,6 +70,8 @@ uses
   Arcade.Chip.M68000 in '..\..\src\chips\Arcade.Chip.M68000.pas',
   Arcade.Chip.YM2151 in '..\..\src\chips\Arcade.Chip.YM2151.pas',
   Arcade.Chip.SegaPCM in '..\..\src\chips\Arcade.Chip.SegaPCM.pas',
+  Arcade.Chip.SegaMath in '..\..\src\chips\Arcade.Chip.SegaMath.pas',
+  Arcade.Chip.Sega315_5296 in '..\..\src\chips\Arcade.Chip.Sega315_5296.pas',
 
   // ---- LES CARTOUCHES (ROM sets) - each one names the board family it needs -------------------
   Arcade.RomSet.Capcom1942 in '..\..\src\romsets\Arcade.RomSet.Capcom1942.pas',   // 1942, 1942a, 1942b, 1942w, 1942h -> capcom84100
@@ -75,6 +80,7 @@ uses
   Arcade.RomSet.Midway1943 in '..\..\src\romsets\Arcade.RomSet.Midway1943.pas',   // 1943, 1943u, 1943ua, 1943j, 1943ja, 1943jah -> capcombm
   Arcade.RomSet.GhostsNGoblins in '..\..\src\romsets\Arcade.RomSet.GhostsNGoblins.pas',   // gng, gngb, gngc, gngt, makaimur* -> capcom85606
   Arcade.RomSet.OutRun in '..\..\src\romsets\Arcade.RomSet.OutRun.pas',   // outrun, outrunra, outrundx, outrundxa -> sega1715376
+  Arcade.RomSet.PowerDrift in '..\..\src\romsets\Arcade.RomSet.PowerDrift.pas',   // pdrift, pdrifta, pdrifte, pdriftj, pdriftja, pdriftjb -> sega1715609
 
   // ---- LIBRAIRIES : GS-Core (command line, CRC32, i18n, JSON) -----------------------------------
   GS.System.CommandLineParser in '..\..\third_party\gs-core\GS.System.CommandLineParser.pas',
